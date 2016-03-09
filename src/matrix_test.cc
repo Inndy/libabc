@@ -1,15 +1,17 @@
 #include "matrix.hpp"
 
 int main () {
-    Matrix<int> a(5, 5);
-    a.one();
-    a(3, 4) = 8;
-    a.Hi();
+    auto one = new Matrix<int>(3, 3);
+    one->one();
+    cout << "one: " << one->str() << endl;
 
-    Matrix<int> b = a;
-    b.Hi();
+    auto two = new Matrix<int>(one);
+    two->add(two);
+    cout << "two: " << two->str() << endl;
 
-    Matrix<int> c(b.h, b.w);
-    c.copy_from(a);
-    c.Hi();
+    auto d = two->mul(two);
+    cout << d->str() << endl;
+    delete d;
+
+    return 0;
 }
