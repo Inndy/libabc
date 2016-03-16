@@ -122,6 +122,19 @@ class Matrix
             }
             return result;
         }
+        Matrix* mul(T v) {
+            MATRIX_FOREACH(x, y) {
+                this->data[x][y] *= v;
+            }
+            return this;
+        }
+
+        Matrix* div(T v) {
+            MATRIX_FOREACH(x, y) {
+                this->data[x][y] /= v;
+            }
+            return this;
+        }
 
 
 
@@ -147,22 +160,25 @@ class Matrix
 
 
 
-        void fill(T value) {
+        Matrix* fill(T value) {
             MATRIX_FOREACH(x, y) {
                 this->data[x][y] = value;
             }
+            return this;
         }
 
-        void zero() {
+        Matrix* zero() {
             MATRIX_FOREACH(x, y) {
                 this->data[x][y] = 0;
             }
+            return this;
         }
 
-        void one() {
+        Matrix* one() {
             MATRIX_FOREACH(x, y) {
                 this->data[x][y] = x == y ? 1 : 0;
             }
+            return this;
         }
 
 
@@ -182,5 +198,12 @@ class Matrix
             buffer << "\n}";
 
             return buffer.str();
+        }
+
+
+
+        // static method
+        static Matrix* one(int h, int w) {
+           return (new Matrix(h, w))->one();
         }
 };
