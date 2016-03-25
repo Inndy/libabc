@@ -2,6 +2,7 @@
  */
 #ifndef util_hpp
 #define util_hpp
+#define fatal(mesg) { std::cerr << mesg << std::endl; exit(1); }
 template<class T>
 class Node{
 public:
@@ -18,4 +19,4 @@ struct TK{
     char op;
 };
 
-#endif 
+#endif

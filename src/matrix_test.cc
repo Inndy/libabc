@@ -41,7 +41,9 @@ int main () {
     delete queueTest;
     
     RPN reverter;
-    reverter.command = "123.454,222,333.5+++23";
+    reverter.variable_name_list.push_back("var");
+    reverter.function_name_list.push_back("var1");
+    reverter.command = "var1(+123.454+222,333.5+++23";
     reverter.test();
     
     return 0;

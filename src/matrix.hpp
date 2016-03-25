@@ -2,8 +2,9 @@
 #include <iostream>
 #include <sstream>
 #include <stdint.h>
+#include "util.hpp"
 
-#define fatal(mesg) { std::cerr << mesg << std::endl; exit(1); }
+
 #define MATRIX_FOREACH(I, J) \
             for(auto I = 0; I < this->h; I++) \
                 for(auto J = 0; J < this->h; J++)
