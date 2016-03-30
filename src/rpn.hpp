@@ -1,3 +1,6 @@
+#ifndef rpn_hpp
+#define rpn_hpp
+
 #include "stack.hpp"
 #include "queue.hpp"
 #include "util.hpp"
@@ -20,6 +23,26 @@ const int FUNCTION_TYPE = 1;
 const int VARIABLE_TYPE = 2;
 const int OPERATOR_TYPE = 3;
 
+const int priority[8][8] = {
+    //        +   -   *   /   ^   !   (   ,
+    {/* + */  0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 },
+    {/* - */  0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 },
+    {/* * */  1 , 1 , 0 , 0 , 0 , 0 , 0 , 0 },
+    {/* / */  1 , 1 , 0 , 0 , 0 , 0 , 0 , 0 },
+    {/* ^ */  1 , 1 , 1 , 1 , 0 , 0 , 0 , 0 },
+    {/* ! */  1 , 1 , 1 , 1 , 1 , 0 , 0 , 0 },
+    {/* ( */  1 , 1 , 1 , 1 , 1 , 1 , 0 , 0 },
+    {/* , */  1 , 1 , 1 , 1 , 1 , 1 , 1 , 0 }
+};
+const int ADD_OP = 0;
+const int MINUS_OP = 1;
+const int MUL_OP = 2;
+const int DIV_OP = 3;
+const int POW_OP = 4;
+const int FACTORIAL_OP = 5;
+const int BRACKET_OP = 6;
+const int DOT_OP = 7;
+
 
 class RPN{
 public:
@@ -30,9 +53,10 @@ public:
     std::string command;
     
     void test(){
-        tokenize();
-        while (!tokenizedEquation.isEmpty()) {
-            TK current = tokenizedEquation.deQueue();
+        decode();
+        std::cout << "hello,11world" << std::endl;
+        while (!result.isEmpty()) {
+            TK current = result.deQueue();
             switch (current.data_type) {
                 case SCALAR_TYPE:
                     std::cout << current.scalar << " , ";
@@ -51,8 +75,16 @@ public:
             }
             //std::cout << temp << " , ";
         }
-        cout << endl;
+        std::cout << endl;
+        std::cout << "hello,world22" << std::endl;
     }
+    
+    void decode(){
+        tokenize();
+        checkError();
+        reverse();
+    }
+    Queue<TK> result;
 private:
     Queue<TK> tokenizedEquation;
     void tokenize(){
@@ -80,19 +112,18 @@ private:
             else if(isOperatorChar(command[index])){
                 TK currentTK;
                 currentTK.data_type = OPERATOR_TYPE;
-                if (command[index] == ',') {
-                    currentTK.op = ')';
-                    tokenizedEquation.enQueue(currentTK);
-                    currentTK.op = '(';
-                    tokenizedEquation.enQueue(currentTK);
-                }else{
+//                if (command[index] == ',') {
+//                    currentTK.op = ')';
+//                    tokenizedEquation.enQueue(currentTK);
+//                    currentTK.op = '(';
+//                    tokenizedEquation.enQueue(currentTK);
+//                }
+//                else{
                     currentTK.op = command[index];
                     tokenizedEquation.enQueue(currentTK);
-                }
+//                }
             }
             //rule of variable/function name: can not start with numeric char or operator
-            //if the current char is neither an operator nor a number
-            //it must be a start of a variable name or function name
             //end with operator type char(for variable "+-*/^!"; for function '(' )
             else if(isNameChar(command[index])){
                 temp.clear();
@@ -119,6 +150,102 @@ private:
                 index--;
                 temp.clear();
             }
+        }
+    }
+    
+    void checkError(){
+        checkBrackets();
+        //TO-DO
+    }
+    
+    void reverse(){
+        result.clear();
+        Stack<TK> op_memory;
+        while (!tokenizedEquation.isEmpty()) {
+            TK temp = tokenizedEquation.deQueue();
+            switch (temp.data_type) {
+                case SCALAR_TYPE:
+                    result.enQueue(temp);
+                    break;
+                case VARIABLE_TYPE:
+                    result.enQueue(temp);
+                    break;
+                case FUNCTION_TYPE:
+                    op_memory.push(temp);
+                    break;
+                case OPERATOR_TYPE:
+                    if (temp.op == '(') {
+                        std::cout << "case (" << std::endl;
+                        op_memory.push(temp);
+                    
+                    }else if (temp.op != ',' && temp.op != ')') {
+                        std::cout << "+-*/ enter, with data " << temp.op << std::endl;
+                        
+                        if (op_memory.isEmpty()) {
+                            std::cout << "case empty" << std::endl;
+                            op_memory.push(temp);
+                        }else if(priorTo(temp, op_memory.peek())){
+                            std::cout << "case prior to peek" << std::endl;
+                            op_memory.push(temp);
+                        }else{
+                            std::cout << "case non-prior to peek" << std::endl;
+                            while (!priorTo(temp, op_memory.peek()) && op_memory.peek().op != '(') {
+                                result.enQueue(op_memory.pop());
+                                if (op_memory.isEmpty()) {
+                                    break;
+                                }
+                            }
+                            op_memory.push(temp);
+                        }
+                        
+                        
+                    }else if(temp.op == ','){
+                        TK tempa = op_memory.pop();
+                        while (tempa.data_type != OPERATOR_TYPE && tempa.op !='(') {
+                            result.enQueue(tempa);
+                        }
+                        op_memory.push(tempa);
+                    }else if(temp.op == ')'){
+                        std::cout << ") type dected" << std::endl;
+//                        while (!op_memory.isEmpty()) {
+//                            std::cout << op_memory.pop().op << std::endl;
+//                        }
+                        while (op_memory.peek().op != '(' ) {
+                            auto tempa = op_memory.pop();
+                            std::cout << tempa.op << std::endl;
+                            result.enQueue(tempa);
+                        }
+                        op_memory.pop();
+                        if (!op_memory.isEmpty() && op_memory.peek().data_type == FUNCTION_TYPE) {
+                            result.enQueue(op_memory.pop());
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        while (!op_memory.isEmpty()) {
+            result.enQueue(op_memory.pop());
+        }
+    }
+    
+    void checkBrackets(){
+        int br_count = 0;
+        for (int index = 0; index < tokenizedEquation.getSize(); index++) {
+
+            if (tokenizedEquation[index].data_type == OPERATOR_TYPE && tokenizedEquation[index].op == '(') {
+                br_count ++;
+            }
+            else if(tokenizedEquation[index].data_type == OPERATOR_TYPE && tokenizedEquation[index].op == ')'){
+                br_count --;
+            }
+            if (br_count < 0) {
+                fatal("Illegal equation: brackets unpaired");
+            }
+        }
+        if (br_count != 0) {
+            fatal("Illegal equation: braktets unpaired");
         }
     }
     
@@ -190,4 +317,39 @@ private:
         }
         return true;
     }
+    //e.g. key1 is add, key 2 is *, return 0
+    bool priorTo(TK key1, TK key2){
+        int _1key, _2key;
+        _1key = trans(key1.op);
+        _2key = trans(key2.op);
+        return priority[_1key][_2key];
+        
+    }
+    
+    int trans(char op){
+        switch (op) {
+            case '+':
+                return ADD_OP;
+            case '-':
+                return MINUS_OP;
+            case '*':
+                return MUL_OP;
+            case '/':
+                return DIV_OP;
+            case '^':
+                return POW_OP;
+            case '!':
+                return FACTORIAL_OP;
+            case '(':
+                return BRACKET_OP;
+            case ',':
+                return DOT_OP;
+
+                
+            default:
+                break;
+        }
+    }
 };
+
+#endif

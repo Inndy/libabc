@@ -1,6 +1,10 @@
+#ifndef stack_hpp
+#define stack_hpp
 #include "util.hpp"
 /* FILO
  */
+#include <iostream>
+using namespace std;
 template <class T>
 class Stack{
 public:
@@ -36,6 +40,8 @@ public:
         }
     }
     T pop(){
+        if(isEmpty())
+            fatal("Pop() form empty stack");
         T temp = end->data;
         if(end != start)
         {
@@ -50,7 +56,15 @@ public:
         }
         return temp;
     }
+    T peek(){
+        if (isEmpty()) {
+            fatal("Peek() form empty stack");
+        }
+        T temp = end->data;
+        return temp;
+    }
 private:
     Node<T> * start;
     Node<T> * end;
 };
+#endif
