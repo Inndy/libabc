@@ -2,7 +2,6 @@
 #include "loadfile.hpp"
 #include "queue.hpp"
 #include "rpn.hpp"
-#include "stack.hpp"
 
 int main () {
     auto one = Matrix<int>::one(3, 3);
@@ -22,18 +21,12 @@ int main () {
     delete three;
     delete four;
     
-    Stack<int> * mystack = new Stack<int>();
-    mystack->push(1);
-    mystack->push(2);
-    std::cout << mystack->peek();
-    std::cout << mystack->pop();
-    std::cout << mystack->pop();
  
     
     RPN reverter;
     reverter.variable_name_list.push_back("var");
     reverter.function_name_list.push_back("var1");
-    reverter.command = "var1(1+2)*(3+4)";
+    reverter.command = "var1(1+2,2)*(3+4)";
     reverter.test();
     
     return 0;

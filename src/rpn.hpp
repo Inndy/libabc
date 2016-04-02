@@ -18,10 +18,7 @@
 const char * NUMERIC_CHAR = "0123456789.";
 const char * OPERATOR_CHAR = "+-*/!^(),";
 const char * NAME_CHAR = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM_$0123456789";
-const int SCALAR_TYPE = 0;
-const int FUNCTION_TYPE = 1;
-const int VARIABLE_TYPE = 2;
-const int OPERATOR_TYPE = 3;
+
 
 const int priority[8][8] = {
     //        +   -   *   /   ^   !   (   ,
@@ -34,14 +31,14 @@ const int priority[8][8] = {
     {/* ( */  1 , 1 , 1 , 1 , 1 , 1 , 0 , 0 },
     {/* , */  1 , 1 , 1 , 1 , 1 , 1 , 1 , 0 }
 };
-const int ADD_OP = 0;
-const int MINUS_OP = 1;
-const int MUL_OP = 2;
-const int DIV_OP = 3;
-const int POW_OP = 4;
-const int FACTORIAL_OP = 5;
-const int BRACKET_OP = 6;
-const int DOT_OP = 7;
+static const int ADD_OP = 0;
+static const int MINUS_OP = 1;
+static const int MUL_OP = 2;
+static const int DIV_OP = 3;
+static const int POW_OP = 4;
+static const int FACTORIAL_OP = 5;
+static const int BRACKET_OP = 6;
+static const int DOT_OP = 7;
 
 
 class RPN{
@@ -54,7 +51,6 @@ public:
     
     void test(){
         decode();
-        std::cout << "hello,11world" << std::endl;
         while (!result.isEmpty()) {
             TK current = result.deQueue();
             switch (current.data_type) {
@@ -73,13 +69,18 @@ public:
                 default:
                     break;
             }
-            //std::cout << temp << " , ";
         }
         std::cout << endl;
-        std::cout << "hello,world22" << std::endl;
     }
     
+    /* The decode function read the equation stored in the string command, 
+     * tokenize it to the tokenizedEquation
+     * reverse it to post fix and output to the queue result
+     */
     void decode(){
+        //clean memory
+        tokenizedEquation.clear();
+        result.clear();
         tokenize();
         checkError();
         reverse();
@@ -89,7 +90,6 @@ private:
     Queue<TK> tokenizedEquation;
     void tokenize(){
         vector<char> temp;
-        std::cout << "Enter Tokenized" << std::endl;
         for(int index = 0; index < command.size(); index++){
             //if the current char is numeric char
             if (isNumericChar(command[index])) {
@@ -112,16 +112,8 @@ private:
             else if(isOperatorChar(command[index])){
                 TK currentTK;
                 currentTK.data_type = OPERATOR_TYPE;
-//                if (command[index] == ',') {
-//                    currentTK.op = ')';
-//                    tokenizedEquation.enQueue(currentTK);
-//                    currentTK.op = '(';
-//                    tokenizedEquation.enQueue(currentTK);
-//                }
-//                else{
                     currentTK.op = command[index];
                     tokenizedEquation.enQueue(currentTK);
-//                }
             }
             //rule of variable/function name: can not start with numeric char or operator
             //end with operator type char(for variable "+-*/^!"; for function '(' )
@@ -164,31 +156,29 @@ private:
         while (!tokenizedEquation.isEmpty()) {
             TK temp = tokenizedEquation.deQueue();
             switch (temp.data_type) {
+                    //threat scalar and variable as 'numbers in a Arithmetic type'
                 case SCALAR_TYPE:
                     result.enQueue(temp);
                     break;
                 case VARIABLE_TYPE:
                     result.enQueue(temp);
                     break;
+                    //take function name as a 'operator'
+                    //other information is mentioned in remark of ','
                 case FUNCTION_TYPE:
                     op_memory.push(temp);
                     break;
                 case OPERATOR_TYPE:
                     if (temp.op == '(') {
-                        std::cout << "case (" << std::endl;
                         op_memory.push(temp);
                     
                     }else if (temp.op != ',' && temp.op != ')') {
-                        std::cout << "+-*/ enter, with data " << temp.op << std::endl;
                         
                         if (op_memory.isEmpty()) {
-                            std::cout << "case empty" << std::endl;
                             op_memory.push(temp);
                         }else if(priorTo(temp, op_memory.peek())){
-                            std::cout << "case prior to peek" << std::endl;
                             op_memory.push(temp);
                         }else{
-                            std::cout << "case non-prior to peek" << std::endl;
                             while (!priorTo(temp, op_memory.peek()) && op_memory.peek().op != '(') {
                                 result.enQueue(op_memory.pop());
                                 if (op_memory.isEmpty()) {
@@ -198,21 +188,27 @@ private:
                             op_memory.push(temp);
                         }
                         
-                        
+                        // func ( op1 op2 <----,
+                        // output op1, op2
+                        // check func is a function
+                        // now op_memory is func (    when ) comes it'll output ops after that ( and func
                     }else if(temp.op == ','){
-                        TK tempa = op_memory.pop();
-                        while (tempa.data_type != OPERATOR_TYPE && tempa.op !='(') {
+                        while (op_memory.peek().op != '(') {
+                            auto tempa = op_memory.pop();
                             result.enQueue(tempa);
+                            op_memory.pop();
+                            if(op_memory.isEmpty() || op_memory.peek().data_type != FUNCTION_TYPE){
+                                fatal("Invalid use of ','");
+                            }else{
+                                TK tempa;
+                                tempa.data_type = OPERATOR_TYPE;
+                                tempa.op = '(';
+                                op_memory.push(tempa);
+                            }
                         }
-                        op_memory.push(tempa);
                     }else if(temp.op == ')'){
-                        std::cout << ") type dected" << std::endl;
-//                        while (!op_memory.isEmpty()) {
-//                            std::cout << op_memory.pop().op << std::endl;
-//                        }
                         while (op_memory.peek().op != '(' ) {
                             auto tempa = op_memory.pop();
-                            std::cout << tempa.op << std::endl;
                             result.enQueue(tempa);
                         }
                         op_memory.pop();
@@ -229,7 +225,7 @@ private:
             result.enQueue(op_memory.pop());
         }
     }
-    
+    //check bracket in pair
     void checkBrackets(){
         int br_count = 0;
         for (int index = 0; index < tokenizedEquation.getSize(); index++) {
@@ -285,7 +281,7 @@ private:
     }
     
 
-    
+    //check the current string is or is not a name of variable
     bool isVariableName(const char * s){
         for (vector<string>::iterator iter = variable_name_list.begin();
              iter != variable_name_list.end();
@@ -295,7 +291,7 @@ private:
         }
         return false;
     }
-    
+    //check the current string is or is not a name of function
     bool isFunctionName(const char * s){
         for (vector<string>::iterator iter = function_name_list.begin();
              iter != function_name_list.end();
@@ -317,6 +313,8 @@ private:
         }
         return true;
     }
+    
+    //compare the priority of the two variable
     //e.g. key1 is add, key 2 is *, return 0
     bool priorTo(TK key1, TK key2){
         int _1key, _2key;

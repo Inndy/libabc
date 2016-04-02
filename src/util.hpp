@@ -11,6 +11,10 @@ public:
     T data;
 };
 
+const int SCALAR_TYPE = 0;
+const int FUNCTION_TYPE = 1;
+const int VARIABLE_TYPE = 2;
+const int OPERATOR_TYPE = 3;
 struct TK{
     int data_type;
     double scalar;
