@@ -5,6 +5,8 @@
 #include "util.hpp"
 
 
+#define debug(X) X
+
 #define MATRIX_FOREACH(I, J) \
             for(auto I = 0; I < this->h; I++) \
                 for(auto J = 0; J < this->h; J++)
@@ -20,20 +22,23 @@ template<class T>
 class Matrix
 {
     private:
-        T **data;
+        T *data;
 
         void allocate_buffer() {
-            if(h == 0 || w == 0)
+            if(this->h == 0 || this->w == 0)
                 fatal("neither `h` or `w` can be zero");
-            this->data = new T*[h];
-            for(auto i = 0; i < this->h; i++)
-                this->data[i] = new T[w];
+
+            this->data = new T[this->h * this->w];
+            debug({ fprintf(stderr, "[+] Matrix allocaed at %p, Buffer allocated at %p\n", this, this->data); })
         }
 
         void free_buffer() {
-            for(auto i = 0; i < this->h; i++)
-                delete [] this->data[i];
-            delete [] this->data;
+            if(this->data == NULL)
+                fatal("buffer is NULL, can not be freed");
+            debug({ fprintf(stderr, "[+] Buffer freed %p\n", this->data); })
+
+            delete [] (char *)this->data;
+            this->data = NULL;
         }
 
     public:
@@ -66,11 +71,11 @@ class Matrix
 
         // data accessor
         T& operator() (int x, int y) {
-            return this->data[x][y];
+            return this->data[x * this->h + y];
         }
 
         T& cell(int x, int y) {
-            return this->data[x][y];
+            return this->data[x * this->h + y];
         }
 
 
