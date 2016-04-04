@@ -78,16 +78,14 @@ class Matrix
         // data manipulation
         Matrix* copy_from(Matrix *m) {
             MATRIX_SIZE_SHOULD_BE_SAME(m);
-            MATRIX_FOREACH(x, y) {
-                this->data[x][y] = m->cell(x, y);
-            }
+            memcpy(&this->cell(0, 0), &m->cell(0, 0), sizeof(T) * this->w * this->h);
             return this;
         }
 
         Matrix* add(Matrix *m) {
             MATRIX_SIZE_SHOULD_BE_SAME(m);
             MATRIX_FOREACH(x, y) {
-                this->data[x][y] += m->cell(x, y);
+                this->cell(x, y) += m->cell(x, y);
             }
             return this;
         }
@@ -98,7 +96,7 @@ class Matrix
         Matrix* sub(Matrix *m) {
             MATRIX_SIZE_SHOULD_BE_SAME(m);
             MATRIX_FOREACH(x, y) {
-                this->data[x][y] -= m->cell(x, y);
+                this->cell(x, y) -= m->cell(x, y);
             }
             return this;
         }
@@ -117,7 +115,7 @@ class Matrix
                 for(auto y = 0; y < r_w; y++) {
                     T sum = 0;
                     for(auto j = 0; j < len; j++)
-                        sum += this->data[x][j] * m->cell(j, y);
+                        sum += this->cell(x, j) * m->cell(j, y);
                     result->cell(x, y) = sum;
                 }
             }
@@ -125,14 +123,14 @@ class Matrix
         }
         Matrix* mul(T v) {
             MATRIX_FOREACH(x, y) {
-                this->data[x][y] *= v;
+                this->cell(x, y) *= v;
             }
             return this;
         }
 
         Matrix* div(T v) {
             MATRIX_FOREACH(x, y) {
-                this->data[x][y] /= v;
+                this->cell(x, y) /= v;
             }
             return this;
         }
@@ -163,21 +161,21 @@ class Matrix
 
         Matrix* fill(T value) {
             MATRIX_FOREACH(x, y) {
-                this->data[x][y] = value;
+                this->cell(x, y) = value;
             }
             return this;
         }
 
         Matrix* zero() {
             MATRIX_FOREACH(x, y) {
-                this->data[x][y] = 0;
+                this->cell(x, y) = 0;
             }
             return this;
         }
 
         Matrix* one() {
             MATRIX_FOREACH(x, y) {
-                this->data[x][y] = x == y ? 1 : 0;
+                this->cell(x, y) = x == y ? 1 : 0;
             }
             return this;
         }
@@ -192,7 +190,7 @@ class Matrix
                 buffer << "  (";
                 for(auto y = 0; y < this->w; y++) {
                     if(y) buffer << ", ";
-                    buffer << this->data[x][y];
+                    buffer << this->cell(x, y);
                 }
                 buffer << ")";
             }
