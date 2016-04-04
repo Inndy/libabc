@@ -1,6 +1,4 @@
-all: matrix_test
-
-matrix_test:
+all:
 	g++ -O2 -std=c++11 matrix_test.cc -o matrix_test
 
 clean:
