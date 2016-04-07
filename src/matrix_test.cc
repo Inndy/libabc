@@ -2,32 +2,27 @@
 #include "loadfile.hpp"
 #include "queue.hpp"
 #include "rpn.hpp"
+#include "util.hpp"
+#include "vector.hpp"
 
 int main () {
-    auto one = Matrix<int>::one(3, 3);
-    cout << "one: " << one->str() << endl;
-
-    auto two = Matrix<int>::one(3, 3)->mul(2);
-    cout << "two: " << two->str() << endl;
-
-    auto three = (new Matrix<int>(two))->add(one);
-    cout << "three: " << three->str() << endl;
-
-    auto four = (new Matrix<int>(two))->mul(2);
-    cout << "four: " << four->str() << endl;
     
-    delete one;
-    delete two;
-    delete three;
-    delete four;
+    myVecD a = myVecD(3);
+    (a)[0] = 1;
+    (a)[1] = 3;
+    (a)[2] = -5;
+    myVecD b = myVecD(3);
+    (b)[0] = 4;
+    (b)[1] = -2;
+    (b)[2] = -1;
     
- 
+    cout << "hello world" << endl;
+    cout << a.str() << endl;
+    cout << b.str() << endl;
+    cout << b[0] <<endl;
+    cout << b[1] << endl;
+    cout << "dot" << a.dot(a,b) << endl;
     
-    RPN reverter;
-    reverter.variable_name_list.push_back("var");
-    reverter.function_name_list.push_back("var1");
-    reverter.command = "var1(1+2,2)*(3+4)";
-    reverter.test();
     
     return 0;
 }
