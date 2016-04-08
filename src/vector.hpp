@@ -201,6 +201,11 @@ public:
     bool orth_judge(Vector * b){
         return orth_judge(this, b);
     }
+    //return the normal vector of the plane produced by two vectors
+    //only for 3-dimensional problem
+    static Vector * normal_vector_of_plane2v(Vector * a, Vector * b){
+        return crossProduct(a,b)->normalize();
+    }
 private:
     
 };
