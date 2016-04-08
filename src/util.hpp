@@ -16,6 +16,7 @@ const int SCALAR_TYPE = 0;
 const int FUNCTION_TYPE = 1;
 const int VARIABLE_TYPE = 2;
 const int OPERATOR_TYPE = 3;
+const double THRESHOLD = 0.00001;
 struct TK{
     int data_type;
     double scalar;
@@ -23,5 +24,20 @@ struct TK{
     std::string variable_name;
     char op;
 };
+
+double absolute_value(double x){
+    if (x < 0) {
+        return -x;
+    }
+    return x;
+}
+
+//retrun true is the difference betweeen a and b is lower than THRESHOLD
+bool approximately_equals(double a, double b){
+    if(absolute_value(a-b) < THRESHOLD)
+        return true;
+    else return false;
+}
+
 
 #endif

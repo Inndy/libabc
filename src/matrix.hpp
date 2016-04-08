@@ -31,7 +31,7 @@ class Matrix
                 fatal("neither `h` or `w` can be zero");
 
             this->data = new T[this->h * this->w];
-            debug({ fprintf(stderr, "[+] Matrix allocaed at %p, Buffer allocated at %p\n", this, this->data); })
+            //debug({ fprintf(stderr, "[+] Matrix allocaed at %p, Buffer allocated at %p\n", this, this->data); })
         }
 
         void free_buffer() {
@@ -215,7 +215,7 @@ class Matrix
             }
             for (int index = 0; index < this->h; index++) {
                 for (int indexa = 0; indexa < this->w; indexa ++) {
-                    (*result)[index] += (this->data[indexa][index] * ((*v)[indexa]));
+                    (*result)[index] += (this->cell(index,indexa) * (*v)[indexa]);
                 }
             }
             return result;
