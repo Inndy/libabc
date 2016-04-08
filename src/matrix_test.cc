@@ -17,12 +17,12 @@ int main () {
     (*d)[0] = 2;
     (*d)[1] = 14;
     (*d)[2] = 5;
-    cout << "dot test " << c->dot(*c,*d) << endl;
-    cout << "re-directioned dot test " << c->dot(c,d) << endl;
-    cout << "cross product " << c->crossProduct(c,d)->str() << endl;
-    cout << "triangle area test " << c->triangleAreaWith(d);
-    cout << "appro " << approximately_equals(1.0,1.00001) << endl;
-    cout << "orthogonal judge " << c->orth_judge(d) << endl;
+
+    Matrix<double> * mat;
+    Vector<double> ** vectors = new Vector<double>*[2];
+    vectors[0] = c; vectors[1] = d;
+    mat = mat->merge_by_vectors(AS_COLUMN,2,vectors);
+    cout << mat->str() << endl;
     delete d;
     delete c;
     return 0;

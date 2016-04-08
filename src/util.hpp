@@ -4,6 +4,7 @@
 #define util_hpp
 #define fatal(mesg) { std::cerr << mesg << std::endl; exit(1); }
 #define myVecD Vector<double>
+
 template<class T>
 class Node{
 public:
@@ -16,6 +17,8 @@ const int SCALAR_TYPE = 0;
 const int FUNCTION_TYPE = 1;
 const int VARIABLE_TYPE = 2;
 const int OPERATOR_TYPE = 3;
+const int AS_COLUMN = 0;
+const int AS_ROW = 1;
 const double THRESHOLD = 0.00001;
 struct TK{
     int data_type;

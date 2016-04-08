@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include <math.h>
 //#include <tgmath.h>
+#include "matrix.hpp"
 
 #define VEC_SIZE_MATCH_THIS_P(V) \
     (this->size == V->size)

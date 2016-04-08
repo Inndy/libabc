@@ -1,3 +1,6 @@
+#ifndef matrix_hpp
+#define matrix_hpp
+
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
@@ -227,4 +230,35 @@ class Matrix
         static Matrix* one(int h, int w) {
            return (new Matrix(h, w))->one();
         }
+    //TODO
+    static Matrix<double> * merge_by_vectors(int merge_type, int number, myVecD ** vectors){
+        if(number <= 0)
+            fatal("invalid number of vectors");
+        int size = vectors[0]->size;
+        for (int index = 0; index < number; index++) {
+            if(vectors[index]->size != size)
+                fatal("vectors with different dimension can't be merged to one matrix");
+        }
+        Matrix<double> * result;
+        int column, row;
+        switch(merge_type){
+            case AS_COLUMN:
+                column = number;
+                row  = size;
+                result = new Matrix<double>(row, column);
+                for (int indexa = 0; indexa < column; indexa++) {
+                    for (int indexb = 0; indexb < row; indexb++) {
+                        (*result)(indexb, indexa) = 1.0;
+                    }
+                }
+                break;
+            case AS_ROW:
+                break;
+            default:
+                fatal("invalid merge type");
+        }
+        return result;
+    }
 };
+
+#endif
