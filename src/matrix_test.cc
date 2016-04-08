@@ -7,22 +7,21 @@
 
 int main () {
     
-    myVecD a = myVecD(3);
-    (a)[0] = 1;
-    (a)[1] = 3;
-    (a)[2] = -5;
-    myVecD b = myVecD(3);
-    (b)[0] = 4;
-    (b)[1] = -2;
-    (b)[2] = -1;
-    
-    cout << "hello world" << endl;
-    cout << a.str() << endl;
-    cout << b.str() << endl;
-    cout << b[0] <<endl;
-    cout << b[1] << endl;
-    cout << "dot" << a.dot(a,b) << endl;
     
     
+    myVecD * c = new myVecD(3);
+    (*c)[0] = 1;
+    (*c)[2] = 2;
+    (*c)[1] = 3;
+    Matrix<double> * mat = new Matrix<double>(3,3);
+    for (int index = 0; index < 3; index++) {
+        for (int indexa = 0; indexa < 3; indexa++) {
+            mat->cell(index,indexa) = 1.0;
+        }
+    }
+    myVecD * d = mat->mul(c);
+    cout << d->str() <<endl;
+    cout << "vector norm test " << c->norm() << endl;
+    delete c;
     return 0;
 }

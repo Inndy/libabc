@@ -3,6 +3,7 @@
 #include <sstream>
 #include <stdint.h>
 #include "util.hpp"
+#include "vector.hpp"
 
 
 #define debug(X) X
@@ -15,7 +16,8 @@
 #define MATRIX_SIZE_SHOULD_BE_SAME(M) \
             if(MATRIX_SIZE_MATCH((M))) \
                 fatal("matrix size mismatch");
-
+#define MATRIX_WIDTH_VECTOR_SIZE_MATCH_P(V) \
+            (this->w == V->size)
 using namespace std;
 
 template<class T>
@@ -203,9 +205,24 @@ class Matrix
 
             return buffer.str();
         }
-
-
-
+        //matrix multiply vector
+        myVecD * mul(myVecD * v){
+            if(!MATRIX_WIDTH_VECTOR_SIZE_MATCH_P(v))
+                fatal("matrix's width != vector's length");
+            myVecD * result = new myVecD(this->h);
+            for (int index = 0; index < this->h; index++) {
+                (*result)[index] = 0.0;
+            }
+            for (int index = 0; index < this->h; index++) {
+                for (int indexa = 0; indexa < this->w; indexa ++) {
+                    (*result)[index] += (this->data[indexa][index] * ((*v)[indexa]));
+                }
+            }
+            return result;
+        }
+        myVecD * mul(myVecD & v){
+            return this->mul(&v);
+        }
         // static method
         static Matrix* one(int h, int w) {
            return (new Matrix(h, w))->one();

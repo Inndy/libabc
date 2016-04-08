@@ -5,6 +5,12 @@
 #include <iostream>
 #include <sstream>
 #include <stdint.h>
+#include <math.h>
+
+#define VEC_SIZE_MATCH_THIS_P(V) \
+    (this->size == V->size)
+#define VEC_SIZE_EQUAL_R(U,V) \
+    (U.size == V.size)
 
 using namespace std;
 
@@ -31,6 +37,47 @@ public:
         this->free_buffer();
     }
     
+    Vector * add(Vector * v){
+        if (!VEC_SIZE_MATCH_THIS_P(v)) {
+            fatal("vector size unmatch")
+        }
+        for (int index = 0; index < this->size; index++) {
+            data[index] += (*v)[index];
+        }
+        return this;
+    }
+    
+    Vector * add(Vector & v){
+        return this->add(&v);
+    }
+    
+    Vector * sub(Vector * v){
+        if(!VEC_SIZE_MATCH_THIS_P(v))
+            fatal("vector size unmatch");
+        for (int index = 0; index < this->size; index++) {
+            data[index] -= (*v)[index];
+        }
+        return this;
+    }
+    
+    Vector * sub(Vector & v){
+        return this->sub(&v);
+    }
+    
+    Vector * mul(T scalar){
+        for (int index = 0; index < this->size; index++) {
+            this->data[index] *= scalar;
+        }
+        return this;
+    }
+    
+    Vector * div(T scalar){
+        for (int index = 0; index < this->size; index++) {
+            this->data[index] /= scalar;
+        }
+        return this;
+    }
+    
     //accessor to element
     T& operator[] (int index){
         if(index >= this->size)
@@ -40,7 +87,7 @@ public:
     
     //dot operation between double vector
     static double dot(Vector<double> & a, Vector<double> & b){
-        if(!a.getSize() == b.getSize())
+        if(!VEC_SIZE_EQUAL_R(a,b))
             fatal("vector size unmatching");
         double result = 0.0;
         for (int index = 0; index < a.getSize(); index++) {
@@ -69,6 +116,15 @@ public:
         }
         buffer << " } ";
         return buffer.str();
+    }
+    
+    //norm, or we say magnitute of vector
+    double norm(){
+        double result = 0.0;
+        for (int index = 0; index < this->size; index++) {
+            result += this->data[index] * this->data[index];
+        }
+        return sqrt(result);
     }
 private:
     
