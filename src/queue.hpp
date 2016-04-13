@@ -2,84 +2,49 @@
 #define queue_hpp
 
 #include "util.hpp"
-/* FIFO
- */
+#include <deque>
+
+/* FIFO */
 template<class T>
 class Queue{
 public:
-    Queue(){
-        size = 0;
-        start = nullptr;
-        end = nullptr;
+    Queue() {
     }
-    
+
     ~Queue(){
         clear();
     }
 
     void clear(){
-        while (!isEmpty()) {
-            Node<T> * tempStart = start;
-            start = start->next;
-            delete tempStart;
-            start->previous = nullptr;
-        }
-        size = 0;
+        Q.clear();
     }
-    
+
     bool isEmpty(){
-        return start == nullptr;
+        return Q.empty();
     }
-    
+
     int getSize(){
-        return this->size;
+        return Q.size();
     }
-    
+
     void enQueue(T data){
-        if(isEmpty()){
-            start = new Node<T>();
-            start->data = data;
-            end = start;
-        }
-        else{
-            end->next = new Node<T>();
-            Node<T> * tempEnd = end;
-            end = end->next;
-            end->data = data;
-            end->previous = tempEnd;
-        }
-        size ++;
+        Q.push_back(data);
     }
-    
+
     T deQueue(){
-        T temp = start->data;
-        if(end != start){
-            Node<T> * tempStart = start->next;
-            delete start;
-            start = tempStart;
-            start->previous = nullptr;
-        }
-        else{
-            end = nullptr;
-            start = nullptr;
-        }
-        return temp;
+        T obj = Q.front();
+        Q.pop_front();
+        return obj;
     }
-    
+
     T & operator [] (int index){
-        if(index >= size)
+        if(index >= Q.size())
             fatal("Element index larger than queue length");
-        Node<T> * current;
-        current = start;
-        for (int count = 0; count < index ; count ++) {
-            current = current->next;
-        }
-        return current->data;
+        return Q[index];
     }
-    
+
     private:
-    Node<T> * start;
-    Node<T> * end;
-    int size;
+        std::deque<T> Q;
 };
+
 #endif
