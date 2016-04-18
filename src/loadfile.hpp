@@ -12,19 +12,23 @@ bool isNumberChar(char ch);
 
 class LoadFile{
 public:
-    LoadFile(){}
-    LoadFile(const char * address){
+    LoadFile() {}
+    LoadFile(const char * address)
+    {
         this->address = new char[strlen(address)];
         strcpy(this->address, address);
     }
-    ~LoadFile(){
+    ~LoadFile()
+    {
         delete address;
     }
-    char * getAddress(){
+    char * getAddress()
+    {
         return address;
     }
     //load matrix file to a matrix array
-    Matrix<double> ** load_matrix(){
+    Matrix<double> ** load_matrix()
+    {
         Matrix<double> ** matrices;
         //check address
         if (strlen(address) == 0) {
@@ -84,26 +88,28 @@ public:
                 }
             }
         }
-        
-        delete temp;
+
+        delete [] temp;
         return matrices;
     }
-    
-    void test(){
-        auto one = Matrix<int>::one(3, 3);
-        cout << "one: " << one->str() << endl;
+
+    void test()
+    {
+        Matrix<int> one(3, 3);
+        one.one();
+        cout << "one: " << one.str() << endl;
         char * add = new char[10];
-        
+
         cout << "strlen" << strlen(add) << endl;
-        delete add;
-        delete one;
+        delete [] add;
     }
 private:
     char * address;
 };
 
-bool isNumberChar(char ch){
-    for(int index = 0; index < 12; index++){
+bool isNumberChar(char ch)
+{
+    for(int index = 0; index < 12; index++) {
         if(ch == NUMBER_CHAR_LIST[index])
             return true;
     }

@@ -10,7 +10,7 @@
  * receive a string as a expression
  * first tokenize the string and store it in a queue
  * then turn it into postfix and return a queue
- * 
+ *
  * to tokenize the functions and variables form the string input
  * function_name_list and variable_name_list should be set
  */
@@ -48,7 +48,7 @@ public:
     vector<std::string> function_name_list;
     vector<std::string> variable_name_list;
     std::string command;
-    
+
     void test(){
         decode();
         while (!result.isEmpty()) {
@@ -72,8 +72,8 @@ public:
         }
         std::cout << endl;
     }
-    
-    /* The decode function read the equation stored in the string command, 
+
+    /* The decode function read the equation stored in the string command,
      * tokenize it to the tokenizedEquation
      * reverse it to post fix and output to the queue result
      */
@@ -144,12 +144,12 @@ private:
             }
         }
     }
-    
+
     void checkError(){
         checkBrackets();
         //TO-DO
     }
-    
+
     void reverse(){
         result.clear();
         Stack<TK> op_memory;
@@ -171,9 +171,9 @@ private:
                 case OPERATOR_TYPE:
                     if (temp.op == '(') {
                         op_memory.push(temp);
-                    
+
                     }else if (temp.op != ',' && temp.op != ')') {
-                        
+
                         if (op_memory.isEmpty()) {
                             op_memory.push(temp);
                         }else if(priorTo(temp, op_memory.peek())){
@@ -187,7 +187,7 @@ private:
                             }
                             op_memory.push(temp);
                         }
-                        
+
                         // func ( op1 op2 <----,
                         // output op1, op2
                         // check func is a function
@@ -244,7 +244,7 @@ private:
             fatal("Illegal equation: braktets unpaired");
         }
     }
-    
+
     bool isNumericChar(char ch){
         for (int index = 0; index < strlen(NUMERIC_CHAR); index++) {
             if (ch == NUMERIC_CHAR[index]) {
@@ -253,7 +253,7 @@ private:
         }
         return false;
     }
-    
+
     bool isOperatorChar(char ch){
         for(int index = 0; index < strlen(OPERATOR_CHAR); index++){
             if(ch == OPERATOR_CHAR[index])
@@ -261,7 +261,7 @@ private:
         }
         return false;
     }
-    
+
     bool isNameChar(char ch){
         for (int index = 0; index < strlen(NAME_CHAR); index++) {
             if(ch == NAME_CHAR[index])
@@ -269,7 +269,7 @@ private:
         }
         return false;
     }
-    
+
     char *convert(const vector<char> & v)
     {
         char *pc = new char[v.size()+1];
@@ -279,7 +279,7 @@ private:
         pc[v.size()] = '\0';
         return pc;
     }
-    
+
 
     //check the current string is or is not a name of variable
     bool isVariableName(const char * s){
@@ -301,7 +301,7 @@ private:
         }
         return false;
     }
-    
+
     bool strcmp(std::string s1, const char * s2){
         if (s1.size() != strlen(s2)) {
             return false;
@@ -313,7 +313,7 @@ private:
         }
         return true;
     }
-    
+
     //compare the priority of the two variable
     //e.g. key1 is add, key 2 is *, return 0
     bool priorTo(TK key1, TK key2){
@@ -321,10 +321,10 @@ private:
         _1key = trans(key1.op);
         _2key = trans(key2.op);
         return priority[_1key][_2key];
-        
+
     }
-    
-    int trans(char op){
+
+    int trans(char op) {
         switch (op) {
             case '+':
                 return ADD_OP;
@@ -342,10 +342,8 @@ private:
                 return BRACKET_OP;
             case ',':
                 return DOT_OP;
-
-                
             default:
-                break;
+                return -1;
         }
     }
 };
