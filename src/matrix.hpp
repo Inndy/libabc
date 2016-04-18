@@ -9,7 +9,9 @@
 #include "vector.hpp"
 
 
+#ifndef debug
 #define debug(X) X
+#endif
 
 #define MATRIX_FOREACH(I, J) \
             for(auto I = 0; I < this->h; I++) \
@@ -72,6 +74,11 @@ class Matrix
             this->free_buffer();
         }
 
+        void copy_from(Matrix *m) {
+            MATRIX_SIZE_SHOULD_BE_SAME(m);
+            memcpy(&this->cell(0, 0), &m->cell(0, 0), sizeof(T) * this->w * this->h);
+        }
+
 
 
         // data accessor
@@ -86,108 +93,92 @@ class Matrix
 
 
         // data manipulation
-        Matrix* copy_from(Matrix *m) {
-            MATRIX_SIZE_SHOULD_BE_SAME(m);
-            memcpy(&this->cell(0, 0), &m->cell(0, 0), sizeof(T) * this->w * this->h);
-            return this;
-        }
-
-        Matrix* add(Matrix *m) {
-            MATRIX_SIZE_SHOULD_BE_SAME(m);
+        Matrix& add(Matrix &m) {
+            MATRIX_SIZE_SHOULD_BE_SAME(&m);
             MATRIX_FOREACH(x, y) {
-                this->cell(x, y) += m->cell(x, y);
+                this->cell(x, y) += m(x, y);
             }
-            return this;
-        }
-        Matrix* add(Matrix& m) {
-            return this->add(&m);
+            return *this;
         }
 
-        Matrix* sub(Matrix *m) {
-            MATRIX_SIZE_SHOULD_BE_SAME(m);
+        Matrix& sub(Matrix &m) {
+            MATRIX_SIZE_SHOULD_BE_SAME(&m);
             MATRIX_FOREACH(x, y) {
-                this->cell(x, y) -= m->cell(x, y);
+                this->cell(x, y) -= m(x, y);
             }
-            return this;
-        }
-        Matrix* sub(Matrix& m) {
-            return this->sub(&m);
+            return &this;
         }
 
-        Matrix* mul(Matrix *m) {
+        Matrix& mul(Matrix *m) {
             if(this->w != m->h)
                 fatal("matrix size mismatch (mul)");
 
             // result height, result width
             auto r_h = this->h, r_w = m->w, len = this->w;
-            Matrix *result = new Matrix(r_h, r_w);
+            Matrix result = Matrix(r_h, r_w);
             for(auto x = 0; x < r_h; x++) {
                 for(auto y = 0; y < r_w; y++) {
                     T sum = 0;
                     for(auto j = 0; j < len; j++)
                         sum += this->cell(x, j) * m->cell(j, y);
-                    result->cell(x, y) = sum;
+                    result(x, y) = sum;
                 }
             }
             return result;
         }
-        Matrix* mul(T v) {
+        Matrix& mul(T v) {
             MATRIX_FOREACH(x, y) {
                 this->cell(x, y) *= v;
             }
-            return this;
+            return *this;
         }
 
-        Matrix* div(T v) {
+        Matrix& div(T v) {
             MATRIX_FOREACH(x, y) {
                 this->cell(x, y) /= v;
             }
-            return this;
+            return *this;
         }
 
 
 
         // operator overloading, all size check is perfrom in named functions
-        Matrix* operator= (const Matrix& m) {
-            return this->copy_from(&m);
+        Matrix& operator= (const Matrix& m) {
+            return *this->copy_from(&m);
         }
 
-        Matrix* operator+= (Matrix& m) { return this->add(m); }
-        Matrix* operator+= (Matrix *m) { return this->add(m); }
+        Matrix& operator+= (Matrix& m) { return *this->add(m); }
+        Matrix& operator+= (Matrix *m) { return *this->add(m); }
 
-        Matrix* operator-= (Matrix& m) { return this->sub(m); }
-        Matrix* operator-= (Matrix *m) { return this->sub(m); }
+        Matrix& operator-= (Matrix& m) { return *this->sub(m); }
+        Matrix& operator-= (Matrix *m) { return *this->sub(m); }
 
 
 
         // these operator will return new Matrix instance
-        Matrix* operator+ (Matrix& m) {
-            Matrix *result = new Matrix(this);
-            result->add(m);
-            return result;
+        Matrix& operator+ (Matrix& m) {
+            Matrix result(this);
+            return result.add(m);
         }
 
 
 
-        Matrix* fill(T value) {
+        void fill(T value) {
             MATRIX_FOREACH(x, y) {
                 this->cell(x, y) = value;
             }
-            return this;
         }
 
-        Matrix* zero() {
+        void zero() {
             MATRIX_FOREACH(x, y) {
                 this->cell(x, y) = 0;
             }
-            return this;
         }
 
-        Matrix* one() {
+        void one() {
             MATRIX_FOREACH(x, y) {
                 this->cell(x, y) = x == y ? 1 : 0;
             }
-            return this;
         }
 
 
@@ -226,10 +217,7 @@ class Matrix
         myVecD * mul(myVecD & v){
             return this->mul(&v);
         }
-        // static method
-        static Matrix* one(int h, int w) {
-           return (new Matrix(h, w))->one();
-        }
+
     //TODO
     static Matrix<double> * merge_by_vectors(int merge_type, int number, myVecD ** vectors){
         if(number <= 0)
