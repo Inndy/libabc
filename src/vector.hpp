@@ -107,6 +107,7 @@ public:
     }
     
     string str(){
+        
         stringstream buffer;
         buffer << "Vector(" << this->size << ")\n{ ";
         for (int index = 0; index < this->size; index ++) {

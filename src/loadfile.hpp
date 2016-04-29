@@ -127,16 +127,16 @@ public:
             // read the row and column information abount the current matrix
             filestream.getline(temp, MAX_SINGLE_ELEMENT_LENGTH, '\n');
             int length = atoi(temp);
-            // construct current matrix
+            // construct current vector
             vectors[index] = new myVecD(length);
             double tmp;
             for (int flag = 0; flag < length; flag++) {
-                filestream>>tmp;
+                filestream >> tmp;
                 (*vectors[index])[flag] = tmp;
             }
             filestream.getline(temp, MAX_SINGLE_ELEMENT_LENGTH,'\n');
-            
         }
+        return vectors;
         
     }
     
