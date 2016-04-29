@@ -7,6 +7,19 @@
 
 int main () {
     
+//    LoadFile * lf = new LoadFile("V1.txt");
+//    int v_count;
+//    myVecD ** vectors = lf->load_vector(v_count);
+//    for (int index = 0; index < v_count; index++) {
+//        cout << vectors[index]->str() << endl;
+//        delete vectors[index];
+//    }
+//    delete [] vectors;
+    
+    
+    
+    
+    
     
     
     myVecD * c = new myVecD(3);
