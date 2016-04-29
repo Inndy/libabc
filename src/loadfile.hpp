@@ -3,6 +3,10 @@
 #include <fstream>
 #include <cstring>
 #include <vector>
+#include "util.hpp"
+
+#ifndef loadfile_hpp
+#define loadfile_hpp
 
 #define MAX_SINGLE_ELEMENT_LENGTH 500
 
@@ -20,14 +24,14 @@ public:
     }
     ~LoadFile()
     {
-        delete address;
+//        delete address;
     }
     char * getAddress()
     {
         return address;
     }
     //load matrix file to a matrix array
-    Matrix<double> ** load_matrix()
+    Matrix<double> ** load_matrix(int & m_count)
     {
         Matrix<double> ** matrices;
         //check address
@@ -45,6 +49,7 @@ public:
     //=======================
         /* build matrices array */
         matrices = new Matrix<double> *[matrix_count];
+        m_count = matrix_count;
     //=======================
         /* read matrix
          * the following loop read one matrix a time
@@ -92,6 +97,49 @@ public:
         delete [] temp;
         return matrices;
     }
+    
+    myVecD ** load_vector(int & v_count){
+        myVecD ** vectors;
+        //check address
+        if (strlen(address) == 0) {
+            fatal("Empty address captured");
+        }
+        //filestream initialize
+        fstream filestream;
+        filestream.open(address, ios::in);
+        char * temp = new char[MAX_SINGLE_ELEMENT_LENGTH];
+        //=======================
+        /* read how many matrices in this file */
+        filestream.getline(temp,MAX_SINGLE_ELEMENT_LENGTH,'\n');
+        v_count = atoi(temp);
+        //=======================
+        /* build vector<double> array */
+        vectors = new myVecD * [v_count];
+        
+        
+        for (int index = 0; index < v_count; index ++) {
+            // read and check the 'V' that stand for a matrix
+            filestream.getline(temp, MAX_SINGLE_ELEMENT_LENGTH, '\n');
+            
+            if (!(temp[0] == 'V' || temp[0] == 'v')) {
+                fatal("Finding non-vector element in vector file");
+            }
+            // read the row and column information abount the current matrix
+            filestream.getline(temp, MAX_SINGLE_ELEMENT_LENGTH, '\n');
+            int length = atoi(temp);
+            // construct current matrix
+            vectors[index] = new myVecD(length);
+            double tmp;
+            for (int flag = 0; flag < length; flag++) {
+                filestream>>tmp;
+                (*vectors[index])[flag] = tmp;
+            }
+            filestream.getline(temp, MAX_SINGLE_ELEMENT_LENGTH,'\n');
+            
+        }
+        
+    }
+    
 
     void test()
     {
@@ -115,3 +163,5 @@ bool isNumberChar(char ch)
     }
     return false;
 }
+
+#endif
