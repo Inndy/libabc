@@ -28,11 +28,11 @@ int main () {
      *  0  3 -1
      * -3  4 -2
      */
-    mat->cell(0,0) = 7; mat->cell(0,1) = 2; mat->cell(0,2) = 1;
-    mat->cell(1,0) = 0; mat->cell(1,1) = 3; mat->cell(1,2) = -1;
-    mat->cell(2,0) = -3;mat->cell(2,1) = 4; mat->cell(2,2) = -2;
+    mat->cell(0,0) = 2; mat->cell(0,1) = 1; mat->cell(0,2) = -1;
+    mat->cell(1,0) = -3; mat->cell(1,1) = -1; mat->cell(1,2) = 2;
+    mat->cell(2,0) = -2;mat->cell(2,1) = 1; mat->cell(2,2) = 2;
     myVecD vec(3);
-    mat->gauss_jordan_elimination(*mat,vec);
+    mat->gaussian_elimination(*mat);
     cout << mat->str() << endl;
     
     Matrix<double> * mat1 = new Matrix<double>(3,3);
@@ -44,7 +44,7 @@ int main () {
     mat1->cell(1,0) = 0; mat1->cell(1,1) = 3; mat1->cell(1,2) = -1;
     mat1->cell(2,0) = -3;mat1->cell(2,1) = 4; mat1->cell(2,2) = -2;
     
-    cout << mat->mul(mat1).str() << endl;
+//    cout << mat->mul(mat1).str() << endl;
     
     
 //    Matrix<double> * mat = new Matrix<double>(3,2);

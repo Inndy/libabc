@@ -116,7 +116,7 @@ class Matrix
 
             // result height, result width
             auto r_h = this->h, r_w = m->w, len = this->w;
-            Matrix result = Matrix(r_h, r_w);
+            Matrix<T> result = Matrix<T>(r_h, r_w);
             for(auto x = 0; x < r_h; x++) {
                 for(auto y = 0; y < r_w; y++) {
                     T sum = 0;
@@ -273,7 +273,8 @@ class Matrix
                         b[ll] -= b[icol]* dum;
                     }
                 }
-
+                
+                
                 
             }//end of for for (i = 0; i < n; i++)
             for(l = n-1; l >=0; l--){
@@ -287,6 +288,45 @@ class Matrix
             }
             
         }
+    static void gaussian_elimination(Matrix<double> & A){
+        int boundary = (A.w<A.h?A.w:A.h);
+        for (int index = 0; index < boundary; index++) {
+            //pivoting
+            double big = 0.0;
+            int i_max;
+            for (int indexa = index; indexa < A.h; indexa++) {
+                if(A.cell(indexa,index)>big){
+                    i_max = indexa;
+                    big = A.cell(indexa, index);
+                }
+            }
+            //singualr matrix dectect
+            if(A.cell(i_max,index) == 0)
+                fatal ("Gussian Elimination: Singular Matrix");
+            //swap the rows
+            if (index != i_max) {
+                for (int indexa = 0; indexa < A.w; indexa++) {
+                    double _temp = A.cell(index,indexa);
+                    A.cell(index,indexa) = A.cell(i_max,indexa);
+                    A.cell(i_max,indexa) = _temp;
+                }
+            }
+            //do elimination for all rows below pivot
+            for (int indexa = index+1; indexa < A.h; indexa++) {
+                //decide the coefficient when minus the piviting row
+                double divpiv = A.cell(indexa,index)/A.cell(index,index);
+                
+                for (int indexb = index+1; indexb< A.w; indexb++) {
+                    A.cell(indexa,indexb) = A.cell(indexa,indexb) - A.cell(index,indexb)*divpiv;
+                }
+                A.cell(indexa,index) = 0;
+            }
+            
+        }
+        
+    }
+    
+    
     
     
     
