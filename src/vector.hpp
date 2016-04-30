@@ -38,6 +38,12 @@ public:
         this->free_buffer();
     }
     
+    void init_to_zero(){
+        for (int index = 0; index < this->size; index++) {
+            (*this)[index] = 0;
+        }
+    }
+    
     Vector * add(Vector * v){
         if (!VEC_SIZE_MATCH_THIS_P(v)) {
             fatal("vector size unmatch")
@@ -107,7 +113,6 @@ public:
     }
     
     string str(){
-        
         stringstream buffer;
         buffer << "Vector(" << this->size << ")\n{ ";
         for (int index = 0; index < this->size; index ++) {
