@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <stdint.h>
+#include <vector>
 #include "util.hpp"
 #include "vector.hpp"
 
@@ -126,6 +127,8 @@ class Matrix
             }
             return result;
         }
+    
+    
         Matrix& mul(T v) {
             MATRIX_FOREACH(x, y) {
                 this->cell(x, y) *= v;
@@ -200,7 +203,7 @@ class Matrix
             return buffer.str();
         }
         //matrix multiply vector
-        myVecD * mul(myVecD * v){
+        myVecD& mul(myVecD * v){
             if(!MATRIX_WIDTH_VECTOR_SIZE_MATCH_P(v))
                 fatal("matrix's width != vector's length");
             myVecD * result = new myVecD(this->h);
@@ -212,12 +215,83 @@ class Matrix
                     (*result)[index] += (this->cell(index,indexa) * (*v)[indexa]);
                 }
             }
-            return result;
+            return (*result);
         }
         myVecD * mul(myVecD & v){
             return this->mul(&v);
         }
+    
+        //method gauss_jordan_elimination receives a matrix A and a vector b\
+        it solve x of Ax = b\
+        after the elimination the result x of Ax = b will replace vector b\
+        the inverse of matrix A will repalce matrix A
+        static void gauss_jordan_elimination(Matrix<double> & A, myVecD & b){
+            int i,j,k;
+            int icol,irow;
+            int l,ll,n = A.h, m = 1;
+            double big, dum, pivinv;
+            std::vector<int> indxc(n),indxr(n), ipiv(n);
+            for (j = 0; j < n; j++) ipiv[j] = 0;
+            for (i = 0; i < n; i++) {
+                big = 0.0;
+                for (j = 0; j < n; j++)
+                    if (ipiv[j]!=1) {
+                        for (k = 0; k < n; k++){
+                            if(ipiv[k] == 0){
+                                if(absolute_value(A.cell(j,k)) >= big){
+                                    big = absolute_value(A.cell(j,k));
+                                    irow = j;
+                                    icol = k;
+                                }//end of if(abs(A.cell(j,k)) >= big)
+                            }//end of if(ipiv[k] == 0){
+                        }//end of for (k = 0; k < n; k++)
+                    }//end of if (ipiv[j]!=1) && end of (j = 0; j < n; j++)
+                ++(ipiv[icol]);
+                if(irow != icol){
+                    for(l = 0; l < n; l++){
+                        double _tempa = A.cell(irow,l);
+                        A.cell(irow,l) = A.cell(icol,l);
+                        A.cell(icol,l) = _tempa;
+                    }//end of for(l = 0; l < n; l++)
+                    double _tempb = b[irow];
+                    b[irow] = b[icol];
+                    b[icol] = _tempb;
+                }//end of if(irow != icol)
+                indxr[i] = irow;
+                indxc[i] = icol;
+                if(A.cell(icol,icol) == 0.0)
+                    fatal("Gauss Jordan Elimination: Sigular Matrix");
+                pivinv = 1.0/A.cell(icol,icol);
+                A.cell(icol,icol) = 1.0;
+                for (l = 0; l < n; l++) A.cell(icol,l) *= pivinv;
+                b[icol] *= pivinv;
+                for (ll = 0; ll < n; ll ++) {
+                    if(ll != icol){
+                        dum = A.cell(ll,icol);
+                        A.cell(ll,icol) = 0.0;
+                        for (l = 0; l < n;l++) A.cell(ll,l) -= A.cell(icol,l)*dum;
+                        b[ll] -= b[icol]* dum;
+                    }
+                }
 
+                
+            }//end of for for (i = 0; i < n; i++)
+            for(l = n-1; l >=0; l--){
+                if (indxr[l] != indxc[l]) {
+                    for (k = 0; k < n; k++) {
+                        double _tempa = A.cell(k,indxr[l]);
+                        A.cell(k,indxr[l]) = A.cell(k,indxc[l]);
+                        A.cell(k,indxc[l]) = _tempa;
+                    }
+                }
+            }
+            
+        }
+    
+    
+    
+    
+    
     //TODO
     static Matrix<double> * merge_by_vectors(int merge_type, int number, myVecD ** vectors){
         if(number <= 0)
