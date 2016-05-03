@@ -31,6 +31,7 @@ private:
 public:
     int size;
     Vector(int size){
+//        cout << "size " <<size << endl;
         this->size = size;
         this->allocate_buffer();
     }
@@ -213,8 +214,49 @@ public:
     static Vector * normal_vector_of_plane2v(Vector * a, Vector * b){
         return crossProduct(a,b)->normalize();
     }
+    //orthogonal projection this on b
+    // (this•b)/(b•b)  *  b
+    //
+    Vector * orth_proj(Vector * b){
+        double temp = dot(this,b)/dot(b,b);
+        return b->mul(temp);
+    }
+    //Gram_Schidt orthogonalization process
+    static void Gram_Schidt(Vector ** vectors, int vec_count){
+        //check if the input is valid
+        //check if the size of the input set is valid
+        if (vec_count == 0) {
+            fatal("Gram_Schidt: null basis set input");
+        }
+        //check if all the input vectors has the same size
+        auto dimension = vectors[0]->size;
+        for (int index = 0; index < vec_count; index++) {
+            if(vectors[index]->size != dimension)
+                fatal("Gram_Schidt: input basis set error");
+        }
+        //declear result array
+        Vector ** result = new Vector*[vec_count];
+
+        for (int index = 0; index < vec_count; index++) {
+            result[index] = vectors[index];
+            for (int indexa = index-1; indexa>=0; indexa--) {
+                myVecD * temp = new myVecD(dimension);
+                for (int indexb = 0; indexb < dimension; indexb++) {
+                    (*temp)[indexb] = (*result[indexa])[indexb];
+                }
+                result[index]->sub( temp->mul((dot(vectors[index],result[indexa])/dot(result[indexa],result[indexa])))    );
+                delete temp;
+            }
+        }
+        //normalize
+        for (int index = 0; index < vec_count; index++) {
+            result[index]->normalize();
+        }
+        vectors = result;
+
+    }
 private:
-    
+
 };
 
 #endif
