@@ -4,35 +4,23 @@
 #include "rpn.hpp"
 #include "util.hpp"
 #include "vector.hpp"
+#include "polynomial.hpp"
 
 int main () {
-    myVecD ** vectors = new myVecD*[3];
-    cout << "hello,world" << endl;
-    for (int index = 0; index < 3; index++) {
-        vectors[index] = new myVecD(3);
+    Polynomial p(3);
+    p[0] = 1;
+    p[1] = 2;
+    p[2] = 1;
+    for (double index = -3.0; index <1; index += 0.1) {
+        cout << " " << p(index) << " ";
     }
-
-
-    (*vectors[0])[0] = 1;
-    (*vectors[0])[1] = 1;
-    (*vectors[0])[2] = 1;
-
-    (*vectors[1])[0] = -0.66666666;
-    (*vectors[1])[1] = 0.333333333;
-    (*vectors[1])[2] = 0.333333333;
-
-    (*vectors[2])[0] = 0;
-    (*vectors[2])[1] = 0.5;
-    (*vectors[2])[2] = -0.5;
-
-//    for (int index = 0; index < 3; index++) {
-//        cout << vectors[index]->str() << endl;
-//    }
-
-    vectors[0]->Gram_Schidt(vectors,3);
-
-    for (int index = 0; index < 3; index++) {
-        cout << vectors[index]->str() << endl;
+    cout << endl;
+    int count;
+    double * result = p.root_finding(count);
+    cout << "We find " << count << " roots for the current polynomial, whose values are" << endl;
+    for (int index = 0; index < count; index++) {
+        cout << " " << result[index] << " ";
     }
+    cout << endl;
     return 0;
 }

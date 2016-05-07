@@ -19,7 +19,7 @@ const int VARIABLE_TYPE = 2;
 const int OPERATOR_TYPE = 3;
 const int AS_COLUMN = 0;
 const int AS_ROW = 1;
-const double THRESHOLD = 0.00001;
+const double THRESHOLD = 0.0000001;
 struct TK{
     int data_type;
     double scalar;
