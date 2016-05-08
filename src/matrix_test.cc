@@ -7,20 +7,13 @@
 #include "polynomial.hpp"
 
 int main () {
-    Polynomial p(3);
-    p[0] = 1;
-    p[1] = 2;
-    p[2] = 1;
-    for (double index = -3.0; index <1; index += 0.1) {
-        cout << " " << p(index) << " ";
-    }
-    cout << endl;
-    int count;
-    double * result = p.root_finding(count);
-    cout << "We find " << count << " roots for the current polynomial, whose values are" << endl;
-    for (int index = 0; index < count; index++) {
-        cout << " " << result[index] << " ";
-    }
-    cout << endl;
+    myMatD * mat = new myMatD(2,2);
+    mat->cell(0,0) = -5; mat->cell(0,1) =  2;// mat->cell(0,2) = -3;
+    mat->cell(1,0) =  2; mat->cell(1,1) =  -2;// mat->cell(1,2) = -6;
+//    mat->cell(2,0) = -1; mat->cell(2,1) = -2; mat->cell(2,2) =  0;
+    vector<double> eigen_values;
+    vector<myVecD>eigen_vectors;
+    mat->eigen_value_vector(eigen_values,eigen_vectors);
+
     return 0;
 }

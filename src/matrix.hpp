@@ -8,6 +8,7 @@
 #include <vector>
 #include "util.hpp"
 #include "vector.hpp"
+#include "polynomial.hpp"
 
 
 #ifndef debug
@@ -111,21 +112,23 @@ class Matrix
         }
 
         Matrix& mul(Matrix *m) {
+            cout << this->str();
+            cout << m->str();
             if(this->w != m->h)
                 fatal("matrix size mismatch (mul)");
 
             // result height, result width
             auto r_h = this->h, r_w = m->w, len = this->w;
-            Matrix<T> result = Matrix<T>(r_h, r_w);
+            Matrix<T> * result = new Matrix<T>(r_h, r_w);
             for(auto x = 0; x < r_h; x++) {
                 for(auto y = 0; y < r_w; y++) {
                     T sum = 0;
                     for(auto j = 0; j < len; j++)
                         sum += this->cell(x, j) * m->cell(j, y);
-                    result(x, y) = sum;
+                    (*result)(x, y) = sum;
                 }
             }
-            return result;
+            return (*result);
         }
     
     
@@ -220,7 +223,59 @@ class Matrix
         myVecD * mul(myVecD & v){
             return this->mul(&v);
         }
-    
+        //trace of a matrix
+        //only avaliable for square matrix
+        double trace(){
+            if(this->h != this->w)
+                fatal("Matrix: trace method: non-square matrix intput");
+            double result = 0;
+            for (int index = 0; index < this->h; index++) {
+                result += this->cell(index,index);
+            }
+            return result;
+        }
+
+        void eigen_value_vector(std::vector<double> & eigen_values,std::vector<myVecD> & eigen_vectors){
+            //the eigen value problem is only avaible for square matrices
+            if (this->w != this->h) {
+                fatal("EigenValue Problem: non-square matrix input");
+            }
+        //=======================================
+            //calculate eigenvalue
+            /*-----------------------------*/
+            //generate characteristic polynomial
+            Polynomial * characteristic_polynomial = generate_characteristic_polynomial();
+            cout << characteristic_polynomial->str();
+
+        }
+        Polynomial * generate_characteristic_polynomial(){
+            Polynomial * result = new Polynomial(h+1);
+            (*result)[h] = 1*pow(-1,h);
+            myMatD * temp = new myMatD(h,w);
+            temp->copy_from(this);
+            myMatD * identity = Identity_matrix(this->h);
+            for (int index = 1; index <= this->h; index++) {
+                if (index > 1) {
+                    double factor = (*result)[this->h-index+1];
+                    identity->mul(factor);
+                    //todo
+                    myMatD * tempa = new myMatD(h,w);
+                    tempa->copy_from(temp);
+                    tempa->add(*identity);
+                    myMatD tempb = this->mul(tempa);
+                    temp->copy_from(&tempb);
+                    delete tempa;
+                    identity->div(factor);
+                }
+                (*result)[this->h - index] = -temp->trace()/(double(index));
+            }
+            for (int index = 0; index <= this->h-1; index++) {
+                (*result)[index] *= pow(-1,h);
+            }
+            return result;
+        }
+        //static methods
+    //================================
         //method gauss_jordan_elimination receives a matrix A and a vector b\
         it solve x of Ax = b\
         after the elimination the result x of Ax = b will replace vector b\
@@ -326,7 +381,13 @@ class Matrix
         
     }
     
-    
+    static myMatD * Identity_matrix(int n){
+        myMatD * result = new myMatD(n,n);
+        for (int index = 0; index < n; index++) {
+            result->cell(index,index) = 1;
+        }
+        return result;
+    }
     
     
     

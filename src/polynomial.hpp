@@ -3,6 +3,7 @@
 #include "util.hpp"
 #include "queue.hpp"
 #include <cmath>
+#include <sstream>
 class Polynomial
 {
 private:
@@ -77,6 +78,21 @@ public:
             result[index] = queue.deQueue();
         }
         return result;
+    }
+
+    string str(){
+        stringstream buffer;
+        buffer << "Polynomial: " << this->size << endl;
+        for (int currentPow = this->size-1; currentPow >=0; currentPow --) {
+            if (currentPow >=1) {
+                buffer << coefficient[currentPow] << "*x^" << currentPow;
+                buffer << " + ";
+            }else if(currentPow == 0){
+                buffer << coefficient[currentPow];
+            }
+        }
+        buffer << endl;
+        return buffer.str();
     }
 };
 
