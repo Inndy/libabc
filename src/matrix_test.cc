@@ -7,13 +7,15 @@
 #include "polynomial.hpp"
 
 int main () {
-    myMatD * mat = new myMatD(2,2);
-    mat->cell(0,0) = -5; mat->cell(0,1) =  2;// mat->cell(0,2) = -3;
-    mat->cell(1,0) =  2; mat->cell(1,1) =  -2;// mat->cell(1,2) = -6;
-//    mat->cell(2,0) = -1; mat->cell(2,1) = -2; mat->cell(2,2) =  0;
-    vector<double> eigen_values;
-    vector<myVecD>eigen_vectors;
-    mat->eigen_value_vector(eigen_values,eigen_vectors);
+    myMatD * mat = new myMatD(3,3);
+    mat->cell(0,0) = 1; mat->cell(0,1) = 3; mat->cell(0,2) = 0;
+    mat->cell(1,0) = 2; mat->cell(1,1) = 6; mat->cell(1,2) = 4;
+    mat->cell(2,0) = -1; mat->cell(2,1) = 0; mat->cell(2,2) = 2;
+
+    cout << mat->str();
+    cout << mat->cofactorMatrix(2,2)->str();
+    cout << mat->det(mat->cofactorMatrix(2,2)) << endl;
+    cout << mat->det(mat);
 
     return 0;
 }

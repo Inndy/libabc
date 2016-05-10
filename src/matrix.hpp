@@ -112,8 +112,6 @@ class Matrix
         }
 
         Matrix& mul(Matrix *m) {
-            cout << this->str();
-            cout << m->str();
             if(this->w != m->h)
                 fatal("matrix size mismatch (mul)");
 
@@ -235,17 +233,108 @@ class Matrix
             return result;
         }
 
+        myMatD * transpose(){
+            myMatD * result = new myMatD(w,h);
+            for (int indexa = 0; indexa < h; indexa++) {
+                for (int indexb = 0; indexb < w; indexb++) {
+                    result->cell(indexb,indexa) = this->cell(indexa,indexb);
+                }
+            }
+            return result;
+        }
+        double det(){
+            return det(this);
+        }
+        double det(myMatD * matrix){
+            if (matrix->h != matrix->w) {
+                fatal("Matrix: Determinant: non-square matrix input");
+            }
+            if (matrix->h == 1) {
+                return matrix->cell(0,0);
+            }
+            if (matrix->h == 2) {
+                return matrix->cell(0,0)*matrix->cell(1,1) - matrix->cell(1,0)*matrix->cell(0,1);
+            }
+            double determinant = 0.0;
+            for (int index = 0; index < this->w; index++) {
+                double i = (index%2 == 0?1:-1);
+                determinant += i*matrix->cell(0,index)*det(matrix->cofactorMatrix(0,index));
+            }
+            return determinant;
+        }
+        myMatD * cofactorMatrix(int row, int col){
+            if(row > h)
+                fatal("Matrix: Determinant: cofactor matrix: row overflow");
+            if(col > w)
+                fatal("Matrix: Determinant: cofactor matrix: column overflow");
+            myMatD * result = new myMatD(h-1,w-1);
+            int indexc = 0;
+            for (int indexa = 0; indexa < h; indexa++) {
+                if(indexa == row)
+                    continue;
+                int indexd = 0;
+                for (int indexb = 0; indexb < w; indexb++) {
+                    if (indexb == col) {
+                        continue;
+                    }
+                    result->cell(indexc, indexd) = this->cell(indexa, indexb);
+                    indexd++;
+                }
+                indexc++;
+            }
+            return result;
+        }
+
         void eigen_value_vector(std::vector<double> & eigen_values,std::vector<myVecD> & eigen_vectors){
             //the eigen value problem is only avaible for square matrices
             if (this->w != this->h) {
                 fatal("EigenValue Problem: non-square matrix input");
             }
+            //clean the vectors that stores the data
+            eigen_values.clear();
+            eigen_vectors.clear();
         //=======================================
             //calculate eigenvalue
             /*-----------------------------*/
             //generate characteristic polynomial
             Polynomial * characteristic_polynomial = generate_characteristic_polynomial();
+            //print out characteristic polynomial for debug
             cout << characteristic_polynomial->str();
+            /*-----------------------------*/
+            //find root for characteristic_polynomial = 0
+            //the roots we find are eigen values for the given matrix
+            int root_count;
+            double * roots = characteristic_polynomial->root_finding(root_count);
+            for (int index = 0; index < root_count; index++) {
+                eigen_values.push_back(roots[index]);
+                cout << roots[index] << " ";
+            }
+            cout << endl;
+            /*-----------------------------*/
+            //find eigenvector coorespond to each eigenvalue
+            //the following loop deal with one eigenvalue each loop
+            for (int index = 0; index < eigen_values.size(); index++) {
+                cout << "the corresponded eigen value is " << eigen_values[index] << endl;
+                //generate correspond matrix
+                myMatD * temp = new myMatD(this->h,this->w);
+                temp->copy_from(this);
+                for (int indexa = 0; indexa < this->h; indexa++) {
+                    temp->cell(indexa,indexa) -= eigen_values[index];
+                }
+                cout << temp->str();
+                //declear vector
+                myVecD * vec = new myVecD(this->h);
+                for (int indexa = 0; indexa < vec->size; indexa++) {
+                    (*vec)[indexa] = 0;
+                }
+                cout << vec->str();
+                //solve correspond linear system by using gauss_jordan elimination
+//                gauss_jordan_elimination(*temp,*vec);
+                //print out for debug
+//                cout << vec->str();
+                eigen_vectors.push_back(*vec);
+//                delete temp;
+            }
 
         }
         Polynomial * generate_characteristic_polynomial(){
