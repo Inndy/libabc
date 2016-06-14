@@ -44,7 +44,7 @@ public:
             (*this)[index] = 0;
         }
     }
-    
+    //vector-addition
     Vector * add(Vector * v){
         if (!VEC_SIZE_MATCH_THIS_P(v)) {
             fatal("vector size unmatch")
@@ -71,7 +71,7 @@ public:
     Vector * sub(Vector & v){
         return this->sub(&v);
     }
-    
+    //scalar-multiplication
     Vector * mul(T scalar){
         for (int index = 0; index < this->size; index++) {
             this->data[index] *= scalar;
@@ -94,6 +94,7 @@ public:
     }
     
     //dot operation between double vector
+    //vector-dot
     static double dot(Vector<double> & a, Vector<double> & b){
         if(!VEC_SIZE_EQUAL_R(a,b))
             fatal("vector size unmatch");
@@ -135,6 +136,7 @@ public:
     }
     
     //norm, or we say magnitude of vector
+    //vector-norm
     double norm(){
         double result = 0.0;
         for (int index = 0; index < this->size; index++) {
@@ -144,6 +146,7 @@ public:
     }
     
     //normalize the vector. set it's magnitude to 1 while maintaining it's other property
+    //vector-normalization
     Vector * normalize(){
         double norm = this->norm();
         for (int index = 0; index < this->size; index++) {
@@ -153,6 +156,7 @@ public:
     }
     
     //cross product of a and b, only in 3 dimension
+    //vector-cross-product
     static Vector * crossProduct(Vector * a, Vector * b){
         if(a->size != 3 || b->size != 3){
             fatal("Cross product only availavle in 3-dimension space");
@@ -163,13 +167,17 @@ public:
         (*result)[2] = (*a)[0]*(*b)[1] - (*a)[1]*(*b)[0];
         return result;
     }
+
     //component of this on b
+    //vector-component
     double componentOn(Vector * b){
         if(!VEC_SIZE_MATCH_THIS_P(b))
             fatal("vector size unmatch");
         return Vector::dot(*this,*b)/b->norm();
     }
+
     //projection of this on b
+    //vector-projection
     Vector * projectionOn(Vector * b){
         if(!VEC_SIZE_MATCH_THIS_P(b))
             fatal("vector size unmatch");
@@ -177,7 +185,9 @@ public:
         tempb->normalize();
         return tempb->mul(this->componentOn(b));
     }
+
     //triangle area of this and b, only avaliable for 3-dimensional problem
+    //vector-triangle-area
     double triangleAreaWith(Vector * b){
         return triangleArea(this,b);
     }
@@ -186,16 +196,21 @@ public:
         double result = Vector::crossProduct(a,b)->norm();
         return result/2;
     }
+
+    //vector-angle-between
     //static version of angle between vector a and b
+    //return the radian of the angle between the two vectors
     static double angleBetween(Vector * a, Vector * b){
         return acos(dot(a,b)/a->norm()/b->norm());
     }
     double angleBetween(Vector * b){
         return angleBetween(this,b);
     }
+
     //judge if the two input vector is parallel
+    //vector-parallel-judgement
     static bool para_judge(Vector * a, Vector * b){
-        return approximately_equals(0.0,angleBetween(a,b));
+        return approximately_equals(0.0,angleBetween(a,b))||approximately_equals(3.141592653589,angleBetween(a,b));
     }
     //judge if this vector and the input vector is parallel
     bool para_judge(Vector * b){
