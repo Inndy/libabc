@@ -253,7 +253,7 @@ class Matrix
             }
             return result;
         }
-
+        //matrix-transpose
         myMatD * transpose(){
             myMatD * result = new myMatD(w,h);
             for (int indexa = 0; indexa < h; indexa++) {
@@ -304,6 +304,18 @@ class Matrix
                 indexc++;
             }
             return result;
+        }
+        //matrix-solve-linear-system
+        void solve_linear_system(myVecD * b){
+            myMatD * mat = new myMatD(this->h,this->w);
+            mat->copy_from(this);
+            gauss_jordan_elimination(*mat,*b);
+        }
+        void solve_linear_system(myVecD & b){
+            myMatD * mat = new myMatD(this->h,this->w);
+            mat->copy_from(this);
+            gauss_jordan_elimination(*mat,b);
+
         }
 
         void eigen_value_vector(std::vector<double> & eigen_values,std::vector<myVecD> & eigen_vectors){
