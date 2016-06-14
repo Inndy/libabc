@@ -10,7 +10,11 @@
 
 #define MAX_SINGLE_ELEMENT_LENGTH 500
 
-using namespace std;
+using std::cout;
+using std::cerr;
+using std::string;
+using std::vector;
+using std::fstream;
 const char NUMBER_CHAR_LIST[] = {'0','1','2','3','4','5','6','7','8','9','.','-'};
 bool isNumberChar(char ch);
 
@@ -40,7 +44,7 @@ public:
         }
         //filestream initialize
         fstream filestream;
-        filestream.open(address, ios::in);
+        filestream.open(address, std::ios::in);
         char * temp = new char[MAX_SINGLE_ELEMENT_LENGTH];
     //=======================
         /* read how many matrices in this file */
@@ -107,7 +111,7 @@ public:
         }
         //filestream initialize
         fstream filestream;
-        filestream.open(address, ios::in);
+        filestream.open(address, std::ios::in);
         char * temp = new char[MAX_SINGLE_ELEMENT_LENGTH];
         //=======================
         /* read how many matrices in this file */

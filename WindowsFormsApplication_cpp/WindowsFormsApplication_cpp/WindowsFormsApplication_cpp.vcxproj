@@ -143,6 +143,7 @@
   <ItemGroup>
     <ClInclude Include="DataManager.h" />
     <ClInclude Include="DotNetUtilities.h" />
+    <ClInclude Include="loadfile.hpp" />
     <ClInclude Include="matrix.hpp" />
     <ClInclude Include="polynomial.hpp" />
     <ClInclude Include="queue.hpp" />

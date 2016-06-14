@@ -4,6 +4,7 @@
 #include "util.hpp"
 #include "matrix.hpp"
 #include"vector.hpp"
+#include"loadfile.hpp"
 
 namespace WindowsFormsApplication_cpp {
 
