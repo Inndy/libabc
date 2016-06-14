@@ -3,7 +3,7 @@
 #ifndef util_hpp
 #define util_hpp
 #define fatal(mesg) { std::cerr << mesg << std::endl; exit(1); }
-#define myVecD Vector<double>
+#define myVecD myVector<double>
 #define myMatD Matrix<double>
 
 template<class T>

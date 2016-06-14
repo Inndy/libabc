@@ -25,11 +25,16 @@
                 fatal("matrix size mismatch");
 #define MATRIX_WIDTH_VECTOR_SIZE_MATCH_P(V) \
             (this->w == V->size)
-using namespace std;
 
+using std::wcout;
+using std::endl;
+using std::cerr;
+using std::string;
+using std::stringstream;
 template<class T>
 class Matrix
 {
+
     private:
         T *data;
 

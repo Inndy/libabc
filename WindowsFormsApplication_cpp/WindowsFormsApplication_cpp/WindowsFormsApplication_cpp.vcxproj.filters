@@ -35,28 +35,22 @@
     <ClInclude Include="DotNetUtilities.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="src\loadfile.hpp">
+    <ClInclude Include="matrix.hpp">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="src\matrix.hpp">
+    <ClInclude Include="queue.hpp">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="src\polynomial.hpp">
+    <ClInclude Include="stack.hpp">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="src\queue.hpp">
+    <ClInclude Include="util.hpp">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="src\rpn.hpp">
+    <ClInclude Include="vector.hpp">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="src\stack.hpp">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="src\util.hpp">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="src\vector.hpp">
+    <ClInclude Include="polynomial.hpp">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

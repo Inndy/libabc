@@ -4,6 +4,11 @@
 #include "queue.hpp"
 #include <cmath>
 #include <sstream>
+using std::string;
+using std::cerr;
+using std::cout;
+using std::endl;
+using std::stringstream;
 class Polynomial
 {
 private:
