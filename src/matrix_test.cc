@@ -7,17 +7,18 @@
 #include "polynomial.hpp"
 
 int main () {
-    myMatD * mat = new myMatD(3,3);
-    mat->cell(0,0) = 1; mat->cell(0,1) = 2; mat->cell(0,2) = 3;
-    mat->cell(1,0) = 2; mat->cell(1,1) = -1; mat->cell(1,2) = 1;
-    mat->cell(2,0) = 3;mat->cell(2,1) = 0; mat->cell(2,2) = -1;
-    myVecD * vec = new myVecD(3);
-    (*vec)[0] = 9; (*vec)[1] = 8; (*vec)[2] = 3;
-    mat->solve_linear_system(vec);
-    mat->inverse();
-    std::cout << mat->str() << std::endl;
-    std::cout << vec->str() << std::endl;
-    std::cout << mat->det() << std::endl;
-    std::cout << mat->det(mat) << std::endl;
+
+    myVecD ** vecs = new myVecD*[4];
+    for(int index = 0; index < 5; index++){
+        vecs[index] = new myVecD(2);
+    }
+    (*vecs[0])[0] = -1.3; (*vecs[0])[1] = 0.103;
+    (*vecs[1])[0] = -0.1; (*vecs[1])[1] = 1.099;
+    (*vecs[2])[0] = 0.2; (*vecs[2])[1] = 0.808;
+    (*vecs[3])[0] = 1.3; (*vecs[3])[1] = 1.897;
+       // (*vecs[5])[0] = 5; (*vecs[5])[1] = 5;
+    double a,b;
+    myMatD::linear_least_square_method(a,b,vecs,4);
+    std::cout << a <<"," << b;
     return 0;
 }

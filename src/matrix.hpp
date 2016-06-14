@@ -326,6 +326,15 @@ class Matrix
             myVecD * vec = new myVecD(this->h);
             gauss_jordan_elimination(*this,*vec);
         }
+        //upper_triangle
+        void row_reduction(){
+            gaussian_elimination(*this);
+        }
+        //matrix-eigen-value
+        void eigen_value(std::vector<double> & eigen_values){
+            std::vector<myVecD> eigen_vectors;
+            eigen_value_vector(eigen_values,eigen_vectors);
+        }
 
         void eigen_value_vector(std::vector<double> & eigen_values,std::vector<myVecD> & eigen_vectors){
             //the eigen value problem is only avaible for square matrices
@@ -512,6 +521,35 @@ class Matrix
             
         }
         
+    }
+    //matrix-least-square
+    static void linear_least_square_method(double &a,double &b,myVecD ** points, int size){
+        int n = size;
+        double xj = 0,xj_square = 0,yj = 0,xjyj = 0;
+
+        for(int index = 0; index < n;index++){
+            if(points[index]->size != 2){
+                fatal("matrix: linear_least_square_mthod: point dimension unmatch");
+            }
+            xj += (*points[index])[0];
+            std::cout << xj << std::endl;
+            xj_square += (*points[index])[0]*(*points[index])[0];
+            yj += (*points[index])[1];
+            xjyj += (*points[index])[0]*(*points[index])[1];
+        }
+
+        myMatD * mat = new myMatD(2,2);
+        mat->cell(0,0) = 1.0*n;
+        mat->cell(0,1) = xj;
+        mat->cell(1,0) = xj;
+        mat->cell(1,1) = xj_square;
+
+        myVecD* vec = new myVecD(2);
+        (*vec)[0] = yj;
+        (*vec)[1] = xjyj;
+        std::cout << n << "," <<xj<<"," <<xj_square << "," <<yj <<"," << xjyj <<std::endl;
+        gauss_jordan_elimination(*mat,*vec);
+        a = (*vec)[0]; b = (*vec)[1];
     }
     
     static myMatD * Identity_matrix(int n){
