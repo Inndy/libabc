@@ -14,6 +14,10 @@ int main () {
     myVecD * vec = new myVecD(3);
     (*vec)[0] = 9; (*vec)[1] = 8; (*vec)[2] = 3;
     mat->solve_linear_system(vec);
+    mat->inverse();
+    std::cout << mat->str() << std::endl;
     std::cout << vec->str() << std::endl;
+    std::cout << mat->det() << std::endl;
+    std::cout << mat->det(mat) << std::endl;
     return 0;
 }

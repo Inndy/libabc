@@ -263,10 +263,11 @@ class Matrix
             }
             return result;
         }
+        //matrix-determinant
         double det(){
             return det(this);
         }
-        double det(myMatD * matrix){
+        double static det(myMatD * matrix){
             if (matrix->h != matrix->w) {
                 fatal("Matrix: Determinant: non-square matrix input");
             }
@@ -277,7 +278,7 @@ class Matrix
                 return matrix->cell(0,0)*matrix->cell(1,1) - matrix->cell(1,0)*matrix->cell(0,1);
             }
             double determinant = 0.0;
-            for (int index = 0; index < this->w; index++) {
+            for (int index = 0; index < matrix->w; index++) {
                 double i = (index%2 == 0?1:-1);
                 determinant += i*matrix->cell(0,index)*det(matrix->cofactorMatrix(0,index));
             }
@@ -306,6 +307,8 @@ class Matrix
             return result;
         }
         //matrix-solve-linear-system
+        //solve linear system with current matrix as A, input vector as b in function A*x = b
+        //replace value of b in input vector with value of x
         void solve_linear_system(myVecD * b){
             myMatD * mat = new myMatD(this->h,this->w);
             mat->copy_from(this);
@@ -316,6 +319,12 @@ class Matrix
             mat->copy_from(this);
             gauss_jordan_elimination(*mat,b);
 
+        }
+        //matrix-inverse
+        //replace current matrix with it's inverse
+        void inverse(){
+            myVecD * vec = new myVecD(this->h);
+            gauss_jordan_elimination(*this,*vec);
         }
 
         void eigen_value_vector(std::vector<double> & eigen_values,std::vector<myVecD> & eigen_vectors){
