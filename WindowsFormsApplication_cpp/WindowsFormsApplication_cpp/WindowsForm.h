@@ -6,6 +6,11 @@
 #include"vector.hpp"
 #include"loadfile.hpp"
 
+myVecD ** vector_list;
+myMatD ** matrix_list;
+int current_vector_count = 0;
+int current_matrix_count = 0;
+
 namespace WindowsFormsApplication_cpp {
 
 	using namespace System;
@@ -330,10 +335,34 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 }
 private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) 
 {
+
 	//在Dialog按下OK便會進入此函式
 	//字串轉制string^ to string
 	std::string tempFileName;
 	MarshalString(openFileDialog1->FileName, tempFileName);
+//=====================================================
+	//use my own load file class to load vector
+	/*--------initialization-----------------*/
+	//if current vector list is not empty, we should clean it before use
+	if (!current_vector_count) {
+		for (int index = 0; index < current_vector_count; index++) 
+			delete vector_list[index];
+		delete[] vector_list;
+	}
+	current_vector_count = 0;
+	LoadFile * lf = new LoadFile(tempFileName.c_str());
+	//load information to vector list
+	vector_list = lf->load_vector(current_vector_count);
+	cout << "hello,world" << current_vector_count<< endl;
+	for (int index = 0; index < current_vector_count; index++) {
+		std::string mytemp = vector_list[index]->str();
+		cout << "mytemp" << mytemp << endl;
+	}
+	//delete object
+	delete lf;
+//=====================================================
+
+
 	//將檔案路徑名稱傳入dataManager
 	dataManager->SetFileName(tempFileName);
 	//從讀取讀取向量資料

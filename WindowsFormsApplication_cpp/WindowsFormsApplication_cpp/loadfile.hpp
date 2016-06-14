@@ -117,6 +117,7 @@ public:
         /* read how many matrices in this file */
         filestream.getline(temp,MAX_SINGLE_ELEMENT_LENGTH,'\n');
         v_count = atoi(temp);
+		cout << "temp read form file" <<v_count <<endl;
         //=======================
         /* build vector<double> array */
         vectors = new myVecD * [v_count];
