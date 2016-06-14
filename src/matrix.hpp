@@ -93,7 +93,7 @@ class Matrix
         }
 
 
-
+        //matrix-addition
         // data manipulation
         Matrix& add(Matrix &m) {
             MATRIX_SIZE_SHOULD_BE_SAME(&m);
@@ -102,7 +102,7 @@ class Matrix
             }
             return *this;
         }
-
+        //matrix-substraction
         Matrix& sub(Matrix &m) {
             MATRIX_SIZE_SHOULD_BE_SAME(&m);
             MATRIX_FOREACH(x, y) {
@@ -110,7 +110,7 @@ class Matrix
             }
             return &this;
         }
-
+        //matrix-multiplication
         Matrix& mul(Matrix *m) {
             if(this->w != m->h)
                 fatal("matrix size mismatch (mul)");
@@ -221,6 +221,27 @@ class Matrix
         myVecD * mul(myVecD & v){
             return this->mul(&v);
         }
+        //rank of matrix
+        //matrix-rank
+        int rank(){
+            myMatD * mat = new myMatD(this->h,this->w);
+            mat->copy_from(this);
+            std::cout << mat->str() <<std::endl;
+            gaussian_elimination(*mat);
+            int result = 0;
+            for(int indexa = 0; indexa < mat->h; indexa++){
+                bool flag = false;
+                for(int indexb = 0; indexb < mat->w;indexb++){
+                    if(mat->cell(indexa,indexb)!=0)
+                        flag = true;
+                }
+                if(flag)
+                    result++;
+            }
+            std::cout << mat->str() << std::endl;
+            return result;
+        }
+
         //trace of a matrix
         //only avaliable for square matrix
         double trace(){
@@ -445,8 +466,8 @@ class Matrix
                 }
             }
             //singualr matrix dectect
-            if(A.cell(i_max,index) == 0)
-                fatal ("Gussian Elimination: Singular Matrix");
+            //if(A.cell(i_max,index) == 0)
+            //    fatal ("Gussian Elimination: Singular Matrix");
             //swap the rows
             if (index != i_max) {
                 for (int indexa = 0; indexa < A.w; indexa++) {
@@ -458,7 +479,9 @@ class Matrix
             //do elimination for all rows below pivot
             for (int indexa = index+1; indexa < A.h; indexa++) {
                 //decide the coefficient when minus the piviting row
-                double divpiv = A.cell(indexa,index)/A.cell(index,index);
+                double divpiv = A.cell(indexa,index);
+                if(A.cell(index,index)!=0)
+                divpiv/=A.cell(index,index);
                 
                 for (int indexb = index+1; indexb< A.w; indexb++) {
                     A.cell(indexa,indexb) = A.cell(indexa,indexb) - A.cell(index,indexb)*divpiv;

@@ -7,16 +7,10 @@
 #include "polynomial.hpp"
 
 int main () {
-    myVecD * vector1 = new myVecD(2);
-    (*vector1)[0] = 1;
-    (*vector1)[1] = 0;
-
-    myVecD * vector2 = new myVecD(2);
-    (*vector2)[0] = 0;
-    (*vector2)[1] = 1;
-
-    std::cout << "angle " << vector1->angleBetween(vector1,vector2) << std::endl;
-    std::cout << "parallel judge" << vector1->orth_judge(vector2) << std::endl;
-
+    myMatD * mat = new myMatD(3,3);
+    mat->cell(0,0) = 0; mat->cell(0,1) = 0; mat->cell(0,2) = 0;
+    mat->cell(1,0) = -3; mat->cell(1,1) = 0; mat->cell(1,2) = 1;
+    mat->cell(2,0) = 3;mat->cell(2,1) = 0; mat->cell(2,2) = -1;
+    std::cout << mat->rank() << std::endl;
     return 0;
 }

@@ -216,6 +216,8 @@ public:
     bool para_judge(Vector * b){
         return para_judge(this, b);
     }
+
+    //vector-orthogonal-judgement
     //judge if the two input vector is orthogonal
     static bool orth_judge(Vector * a, Vector * b){
         return approximately_equals(0.0, dot(a,b));
@@ -224,6 +226,8 @@ public:
     bool orth_judge(Vector * b){
         return orth_judge(this, b);
     }
+
+    //vector-plane-normal
     //return the normal vector of the plane produced by two vectors
     //only for 3-dimensional problem
     static Vector * normal_vector_of_plane2v(Vector * a, Vector * b){
@@ -235,6 +239,11 @@ public:
     Vector * orth_proj(Vector * b){
         double temp = dot(this,b)/dot(b,b);
         return b->mul(temp);
+    }
+
+    //vector-orthogonal-basis
+    static void find_orthogonal_basis_of_basis(Vector ** basis, int base_count){
+        Gram_Schidt(basis,base_count);
     }
     //Gram_Schidt orthogonalization process
     static void Gram_Schidt(Vector ** vectors, int vec_count){
