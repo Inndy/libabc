@@ -143,6 +143,14 @@
   <ItemGroup>
     <ClInclude Include="DataManager.h" />
     <ClInclude Include="DotNetUtilities.h" />
+    <ClInclude Include="src\loadfile.hpp" />
+    <ClInclude Include="src\matrix.hpp" />
+    <ClInclude Include="src\polynomial.hpp" />
+    <ClInclude Include="src\queue.hpp" />
+    <ClInclude Include="src\rpn.hpp" />
+    <ClInclude Include="src\stack.hpp" />
+    <ClInclude Include="src\util.hpp" />
+    <ClInclude Include="src\vector.hpp" />
     <ClInclude Include="WindowsForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>

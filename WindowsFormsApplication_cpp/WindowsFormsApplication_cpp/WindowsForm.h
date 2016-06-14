@@ -1,6 +1,9 @@
 #pragma once
 #include"DataManager.h"
 #include"DotNetUtilities.h"
+#include "util.hpp"
+#include "matrix.hpp"
+#include"vector.hpp"
 
 namespace WindowsFormsApplication_cpp {
 
