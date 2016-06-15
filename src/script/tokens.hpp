@@ -32,6 +32,7 @@ CharType TokenCharType(char ch)
         case '*':
         case '/':
         case '%':
+        case '^':
             return C_Operator;
         case '(':
         case ')':
@@ -327,12 +328,7 @@ class Tokenizer
                                 break;
                             }
                         }
-                        if(ch == '*' && this->peek(1) == '*') { // power
-                            this->next();
-                            this->add_token(new TOperator("**"));
-                        } else {
-                            this->add_token(new TOperator(string(1, ch)));
-                        }
+                        this->add_token(new TOperator(string(1, ch)));
                         this->next();
                         break;
 
