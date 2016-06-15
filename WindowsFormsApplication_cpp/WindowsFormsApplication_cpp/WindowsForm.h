@@ -10,6 +10,7 @@ myVecD ** vector_list;
 myMatD ** matrix_list;
 int current_vector_count = 0;
 int current_matrix_count = 0;
+int load_flag;
 
 namespace WindowsFormsApplication_cpp {
 
@@ -89,6 +90,7 @@ namespace WindowsFormsApplication_cpp {
 			String^ userInput;
 			int lastInputLength;
 	private: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
+	private: System::Windows::Forms::ToolStripMenuItem^  loadMatrixToolStripMenuItem;
 			 /// </summary>
 		System::ComponentModel::Container ^components;
 
@@ -112,6 +114,7 @@ namespace WindowsFormsApplication_cpp {
 			this->OutputLabel = (gcnew System::Windows::Forms::Label());
 			this->Output = (gcnew System::Windows::Forms::TextBox());
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
+			this->loadMatrixToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->menuStrip2->SuspendLayout();
 			this->tableLayoutPanel1->SuspendLayout();
 			this->flowLayoutPanel1->SuspendLayout();
@@ -120,24 +123,29 @@ namespace WindowsFormsApplication_cpp {
 			// 
 			// menuStrip2
 			// 
+			this->menuStrip2->ImageScalingSize = System::Drawing::Size(24, 24);
 			this->menuStrip2->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->FileToolStripMenuItem });
 			this->menuStrip2->Location = System::Drawing::Point(0, 0);
 			this->menuStrip2->Name = L"menuStrip2";
-			this->menuStrip2->Size = System::Drawing::Size(384, 24);
+			this->menuStrip2->Padding = System::Windows::Forms::Padding(9, 3, 0, 3);
+			this->menuStrip2->Size = System::Drawing::Size(576, 34);
 			this->menuStrip2->TabIndex = 1;
 			this->menuStrip2->Text = L"menuStrip2";
 			// 
 			// FileToolStripMenuItem
 			// 
-			this->FileToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->LoadVectorToolStripMenuItem });
+			this->FileToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
+				this->LoadVectorToolStripMenuItem,
+					this->loadMatrixToolStripMenuItem
+			});
 			this->FileToolStripMenuItem->Name = L"FileToolStripMenuItem";
-			this->FileToolStripMenuItem->Size = System::Drawing::Size(39, 20);
+			this->FileToolStripMenuItem->Size = System::Drawing::Size(51, 28);
 			this->FileToolStripMenuItem->Text = L"File";
 			// 
 			// LoadVectorToolStripMenuItem
 			// 
 			this->LoadVectorToolStripMenuItem->Name = L"LoadVectorToolStripMenuItem";
-			this->LoadVectorToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->LoadVectorToolStripMenuItem->Size = System::Drawing::Size(211, 30);
 			this->LoadVectorToolStripMenuItem->Text = L"Load Vector";
 			this->LoadVectorToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::LoadVectorToolStripMenuItem_Click);
 			// 
@@ -151,12 +159,13 @@ namespace WindowsFormsApplication_cpp {
 			this->tableLayoutPanel1->Controls->Add(this->flowLayoutPanel1, 1, 0);
 			this->tableLayoutPanel1->Controls->Add(this->flowLayoutPanel2, 0, 0);
 			this->tableLayoutPanel1->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->tableLayoutPanel1->Location = System::Drawing::Point(0, 24);
+			this->tableLayoutPanel1->Location = System::Drawing::Point(0, 34);
+			this->tableLayoutPanel1->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->tableLayoutPanel1->Name = L"tableLayoutPanel1";
 			this->tableLayoutPanel1->RowCount = 1;
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 100)));
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 20)));
-			this->tableLayoutPanel1->Size = System::Drawing::Size(384, 338);
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 30)));
+			this->tableLayoutPanel1->Size = System::Drawing::Size(576, 509);
 			this->tableLayoutPanel1->TabIndex = 2;
 			// 
 			// flowLayoutPanel1
@@ -165,9 +174,10 @@ namespace WindowsFormsApplication_cpp {
 			this->flowLayoutPanel1->Controls->Add(this->Input);
 			this->flowLayoutPanel1->Controls->Add(this->VectorLabel);
 			this->flowLayoutPanel1->Controls->Add(this->VectorList);
-			this->flowLayoutPanel1->Location = System::Drawing::Point(195, 3);
+			this->flowLayoutPanel1->Location = System::Drawing::Point(292, 4);
+			this->flowLayoutPanel1->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->flowLayoutPanel1->Name = L"flowLayoutPanel1";
-			this->flowLayoutPanel1->Size = System::Drawing::Size(186, 332);
+			this->flowLayoutPanel1->Size = System::Drawing::Size(279, 498);
 			this->flowLayoutPanel1->TabIndex = 0;
 			// 
 			// InputLabel
@@ -176,18 +186,20 @@ namespace WindowsFormsApplication_cpp {
 			this->InputLabel->AutoSize = true;
 			this->InputLabel->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Bold | System::Drawing::FontStyle::Italic)),
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(136)));
-			this->InputLabel->Location = System::Drawing::Point(3, 0);
+			this->InputLabel->Location = System::Drawing::Point(4, 0);
+			this->InputLabel->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->InputLabel->Name = L"InputLabel";
-			this->InputLabel->Size = System::Drawing::Size(41, 16);
+			this->InputLabel->Size = System::Drawing::Size(57, 23);
 			this->InputLabel->TabIndex = 0;
 			this->InputLabel->Text = L"Input";
 			// 
 			// Input
 			// 
-			this->Input->Location = System::Drawing::Point(3, 19);
+			this->Input->Location = System::Drawing::Point(4, 27);
+			this->Input->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->Input->Multiline = true;
 			this->Input->Name = L"Input";
-			this->Input->Size = System::Drawing::Size(180, 158);
+			this->Input->Size = System::Drawing::Size(268, 235);
 			this->Input->TabIndex = 1;
 			this->Input->TextChanged += gcnew System::EventHandler(this, &WindowsForm::Input_TextChanged);
 			// 
@@ -197,28 +209,31 @@ namespace WindowsFormsApplication_cpp {
 			this->VectorLabel->AutoSize = true;
 			this->VectorLabel->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Bold | System::Drawing::FontStyle::Italic)),
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(136)));
-			this->VectorLabel->Location = System::Drawing::Point(3, 180);
+			this->VectorLabel->Location = System::Drawing::Point(4, 266);
+			this->VectorLabel->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->VectorLabel->Name = L"VectorLabel";
-			this->VectorLabel->Size = System::Drawing::Size(47, 16);
+			this->VectorLabel->Size = System::Drawing::Size(67, 23);
 			this->VectorLabel->TabIndex = 2;
 			this->VectorLabel->Text = L"Vector";
 			// 
 			// VectorList
 			// 
 			this->VectorList->FormattingEnabled = true;
-			this->VectorList->ItemHeight = 12;
-			this->VectorList->Location = System::Drawing::Point(3, 199);
+			this->VectorList->ItemHeight = 18;
+			this->VectorList->Location = System::Drawing::Point(4, 293);
+			this->VectorList->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->VectorList->Name = L"VectorList";
-			this->VectorList->Size = System::Drawing::Size(180, 124);
+			this->VectorList->Size = System::Drawing::Size(268, 184);
 			this->VectorList->TabIndex = 3;
 			// 
 			// flowLayoutPanel2
 			// 
 			this->flowLayoutPanel2->Controls->Add(this->OutputLabel);
 			this->flowLayoutPanel2->Controls->Add(this->Output);
-			this->flowLayoutPanel2->Location = System::Drawing::Point(3, 3);
+			this->flowLayoutPanel2->Location = System::Drawing::Point(4, 4);
+			this->flowLayoutPanel2->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->flowLayoutPanel2->Name = L"flowLayoutPanel2";
-			this->flowLayoutPanel2->Size = System::Drawing::Size(186, 332);
+			this->flowLayoutPanel2->Size = System::Drawing::Size(279, 498);
 			this->flowLayoutPanel2->TabIndex = 1;
 			// 
 			// OutputLabel
@@ -227,9 +242,10 @@ namespace WindowsFormsApplication_cpp {
 			this->OutputLabel->AutoSize = true;
 			this->OutputLabel->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Bold | System::Drawing::FontStyle::Italic)),
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(136)));
-			this->OutputLabel->Location = System::Drawing::Point(3, 0);
+			this->OutputLabel->Location = System::Drawing::Point(4, 0);
+			this->OutputLabel->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->OutputLabel->Name = L"OutputLabel";
-			this->OutputLabel->Size = System::Drawing::Size(52, 16);
+			this->OutputLabel->Size = System::Drawing::Size(73, 23);
 			this->OutputLabel->TabIndex = 0;
 			this->OutputLabel->Text = L"Output";
 			// 
@@ -237,11 +253,12 @@ namespace WindowsFormsApplication_cpp {
 			// 
 			this->Output->Font = (gcnew System::Drawing::Font(L"新細明體", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
-			this->Output->Location = System::Drawing::Point(3, 19);
+			this->Output->Location = System::Drawing::Point(4, 27);
+			this->Output->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->Output->Multiline = true;
 			this->Output->Name = L"Output";
 			this->Output->ReadOnly = true;
-			this->Output->Size = System::Drawing::Size(183, 313);
+			this->Output->Size = System::Drawing::Size(272, 468);
 			this->Output->TabIndex = 1;
 			// 
 			// openFileDialog1
@@ -249,13 +266,21 @@ namespace WindowsFormsApplication_cpp {
 			this->openFileDialog1->FileName = L"openFileDialog1";
 			this->openFileDialog1->FileOk += gcnew System::ComponentModel::CancelEventHandler(this, &WindowsForm::openFileDialog1_FileOk);
 			// 
+			// loadMatrixToolStripMenuItem
+			// 
+			this->loadMatrixToolStripMenuItem->Name = L"loadMatrixToolStripMenuItem";
+			this->loadMatrixToolStripMenuItem->Size = System::Drawing::Size(211, 30);
+			this->loadMatrixToolStripMenuItem->Text = L"Load Matrix";
+			this->loadMatrixToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::loadMatrixToolStripMenuItem_Click);
+			// 
 			// WindowsForm
 			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
+			this->AutoScaleDimensions = System::Drawing::SizeF(9, 18);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(384, 362);
+			this->ClientSize = System::Drawing::Size(576, 543);
 			this->Controls->Add(this->tableLayoutPanel1);
 			this->Controls->Add(this->menuStrip2);
+			this->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
 			this->Name = L"WindowsForm";
 			this->Text = L"VectorExample";
 			this->Load += gcnew System::EventHandler(this, &WindowsForm::WindowsForm_Load);
@@ -276,6 +301,8 @@ private: System::Void WindowsForm_Load(System::Object^  sender, System::EventArg
 }
 private: System::Void LoadVectorToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) 
 {
+	//set load_flag to zero, which will be used to judge whether we want to load vector or matrix 
+	load_flag = 0;
 	//開啟Dialog
 	openFileDialog1->ShowDialog();
 }
@@ -295,26 +322,21 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 			//定意輸出暫存
 			String^ outputTemp = "";
 			//透過for迴圈，從向量資料中找出對應變數
-			for (unsigned int i = 0; i < vectors.size();i++)
-			{
-				//若變數名稱與指令變數名稱符合
-				if (userCommand[1] == gcnew String(vectors[i].Name.c_str()))
-				{
-					//將輸出格式存入暫存
-					outputTemp += "[";
-					//將輸出資料存入暫存
-					for (unsigned int j = 0; j<vectors[i].Data.size(); j++)
-					{
-						outputTemp += vectors[i].Data[j].ToString();
-						if (j != vectors[i].Data.size() - 1)
-							outputTemp += ",";
-					}
-					//將輸出格式存入暫存，並且換行
-					outputTemp += "]" + Environment::NewLine;
-					//輸出暫存資訊
-					Output->Text += gcnew String(vectors[i].Name.c_str()) +" = "+ outputTemp;
-					break;
+			if (userCommand[1] == "vector") {
+				int temp = Convert::ToInt32(userCommand[2]);
+				if (temp < current_vector_count&&temp>=0) {
+					Output->Text += gcnew String(vector_list[temp]->str().c_str());
+					Output->Text += Environment::NewLine;
 				}
+				else Output->Text += gcnew String("command handle: print: vector: invalid index of vector") + Environment::NewLine;
+			}
+			else if (userCommand[1] == "matrix") {
+				int temp = Convert::ToInt32(userCommand[2]);
+				if (temp < current_matrix_count&&temp >= 0) {
+					Output->Text += gcnew String(matrix_list[temp]->str().c_str());
+					Output->Text += Environment::NewLine;
+				}
+				else Output->Text += gcnew String("command handle: print: vector: invalid index of matrix") + Environment::NewLine;
 			}
 		}
 		//反之則判斷找不到指令
@@ -335,65 +357,94 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 }
 private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) 
 {
+	//click load vector will set load_flag to zero
+	//the following code block after if statement is used to laod vectors
 
 	//在Dialog按下OK便會進入此函式
 	//字串轉制string^ to string
 	std::string tempFileName;
 	MarshalString(openFileDialog1->FileName, tempFileName);
-//=====================================================
-	//use my own load file class to load vector
-	/*--------initialization-----------------*/
-	//if current vector list is not empty, we should clean it before use
-	if (!current_vector_count) {
-		for (int index = 0; index < current_vector_count; index++) 
-			delete vector_list[index];
-		delete[] vector_list;
-	}
-	current_vector_count = 0;
-	LoadFile * lf = new LoadFile(tempFileName.c_str());
-	//load information to vector list
-	vector_list = lf->load_vector(current_vector_count);
-	cout << "hello,world" << current_vector_count<< endl;
-	for (int index = 0; index < current_vector_count; index++) {
-		std::string mytemp = vector_list[index]->str();
-		cout << "mytemp" << mytemp << endl;
-	}
-	//delete object
-	delete lf;
-//=====================================================
 
+	if (!load_flag) {
 
-	//將檔案路徑名稱傳入dataManager
-	dataManager->SetFileName(tempFileName);
-	//從讀取讀取向量資料
-	if (dataManager->LoadVectorData())
-	{
-		//將VectorList中項目先做清除
-		VectorList->Items->Clear();	
-		//取得所有向量資料
-		std::vector<Vector> vectors = dataManager->GetVectors();
-
-		for (unsigned int i = 0; i < vectors.size(); i++)
-		{
-			//將檔案名稱存入暫存
-			std::string tempString = vectors[i].Name;
-			//將輸出格式存入暫存
-			tempString += " [";
-			//將輸出資料存入暫存
-			for (unsigned int j = 0; j<vectors[i].Data.size(); j++)
-			{
-				std::string scalarString = std::to_string(vectors[i].Data[j]);
-				tempString += scalarString.substr(0, scalarString.size() - 5);
-				if (j != vectors[i].Data.size() - 1)
-					tempString += ",";
-			}
-			//將輸出格式存入暫存
-			tempString += "]";
-			//將項目加入VectorList中
-			VectorList->Items->Add(gcnew String(tempString.c_str()));
+		//=====================================================
+			//use my own load file class to load vector
+			/*--------initialization-----------------*/
+			//if current vector list is not empty, we should clean it before use
+		if (!current_vector_count) {
+			for (int index = 0; index < current_vector_count; index++)
+				delete vector_list[index];
+			delete[] vector_list;
 		}
-		Output->Text += "-Vector datas have been loaded-" + Environment::NewLine;
+		current_vector_count = 0;
+		LoadFile * lf = new LoadFile(tempFileName.c_str());
+		//load information to vector list
+		vector_list = lf->load_vector(current_vector_count);
+		//print out for test;
+		if(0)
+			for (int index = 0; index < current_vector_count; index++) {
+				std::string mytemp = vector_list[index]->str();
+				cout << "mytemp" << mytemp << endl;
+			}
+		//delete object
+		delete lf;
+		//=====================================================
+
+
+			//將檔案路徑名稱傳入dataManager
+		dataManager->SetFileName(tempFileName);
+		//從讀取讀取向量資料
+		if (dataManager->LoadVectorData())
+		{
+			//將VectorList中項目先做清除
+			VectorList->Items->Clear();
+			//取得所有向量資料
+			std::vector<Vector> vectors = dataManager->GetVectors();
+
+			for (unsigned int i = 0; i < vectors.size(); i++)
+			{
+				//將檔案名稱存入暫存
+				std::string tempString = vectors[i].Name;
+				//將輸出格式存入暫存
+				tempString += " [";
+				//將輸出資料存入暫存
+				for (unsigned int j = 0; j < vectors[i].Data.size(); j++)
+				{
+					std::string scalarString = std::to_string(vectors[i].Data[j]);
+					tempString += scalarString.substr(0, scalarString.size() - 5);
+					if (j != vectors[i].Data.size() - 1)
+						tempString += ",";
+				}
+				//將輸出格式存入暫存
+				tempString += "]";
+				//將項目加入VectorList中
+				VectorList->Items->Add(gcnew String(tempString.c_str()));
+			}
+			Output->Text += "-Vector datas have been loaded-" + Environment::NewLine;
+		}
 	}
+	if (load_flag == 1) {
+		cout << "load matrix" << endl;
+		if (!current_matrix_count) {
+			for (int index = 0; index < current_matrix_count; index++) 
+				delete matrix_list[index];
+			delete[] matrix_list;
+		}
+		current_matrix_count = 0;
+		LoadFile * lf = new LoadFile(tempFileName.c_str());
+		matrix_list = lf->load_matrix(current_matrix_count);
+		delete lf;
+		if (1) {
+			for (int index = 0; index < current_matrix_count; index++)
+				cout << matrix_list[index]->str() << index++;
+		}
+	}
+}
+private: System::Void loadMatrixToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+	//set load_flag to zero, which will be used to judge whether we want to load vector or matrix 
+	load_flag = 1;
+	//開啟Dialog
+	openFileDialog1->ShowDialog();
 }
 };
 }
