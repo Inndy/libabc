@@ -344,12 +344,9 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 			if (userCommand[1] == "matrix" && userCommand[3] == "matrix") {
 				int indexa = Convert::ToInt32(userCommand[2]); int indexb = Convert::ToInt32(userCommand[4]);
 				if (indexa >= 0 && indexa < current_matrix_count && indexb >= 0 && indexb < current_matrix_count) {
-					myMatD * temp = new myMatD(matrix_list[indexa]->h, matrix_list[indexa]->w);
-					temp->copy_from(matrix_list[indexa]);
-					temp->add(*matrix_list[indexb]);
-					Output->Text += gcnew String(temp->str().c_str());
+					matrix_list[indexa]->add(*matrix_list[indexb]);
+					Output->Text += gcnew String(matrix_list[indexa]->str().c_str());
 					Output->Text += Environment::NewLine;
-					delete temp;
 				}
 				else Output->Text += gcnew String("command handle: add: matrix addition: invalid index input") + Environment::NewLine;
 			}
@@ -357,11 +354,9 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 			else if (userCommand[1] == "vector" && userCommand[3] == "vector") {
 				int indexa = Convert::ToInt32(userCommand[2]); int indexb = Convert::ToInt32(userCommand[4]);
 				if (indexa >= 0 && indexa < current_vector_count&& indexb >= 0 && indexb < current_vector_count) {
-					myVecD * temp = vector_list[indexa]->copy();
-					temp->add(vector_list[indexb]);
-					Output->Text += gcnew String(temp->str().c_str());
+					vector_list[indexa]->add(vector_list[indexb]);
+					Output->Text += gcnew String(vector_list[indexa]->str().c_str());
 					Output->Text += Environment::NewLine;
-					delete temp;
 				}
 				else Output->Text += gcnew String("command handle: add: vector addition: invalid index input") + Environment::NewLine;
 			}
@@ -370,12 +365,9 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 			if (userCommand[1] == "matrix" && userCommand[3] == "matrix") {
 				int indexa = Convert::ToInt32(userCommand[2]); int indexb = Convert::ToInt32(userCommand[4]);
 				if (indexa >= 0 && indexa < current_matrix_count && indexb >= 0 && indexb < current_matrix_count) {
-					myMatD * temp = new myMatD(matrix_list[indexa]->h, matrix_list[indexa]->w);
-					temp->copy_from(matrix_list[indexa]);
-					temp->sub(*matrix_list[indexb]);
-					Output->Text += gcnew String(temp->str().c_str());
+					matrix_list[indexa]->sub(*matrix_list[indexb]);
+					Output->Text += gcnew String(matrix_list[indexa]->str().c_str());
 					Output->Text += Environment::NewLine;
-					delete temp;
 				}
 				else Output->Text += gcnew String("command handle: add: matrix substraction: invalid index input") + Environment::NewLine;
 			}
@@ -383,11 +375,9 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 			else if (userCommand[1] == "vector" && userCommand[3] == "vector") {
 				int indexa = Convert::ToInt32(userCommand[2]); int indexb = Convert::ToInt32(userCommand[4]);
 				if (indexa >= 0 && indexa < current_vector_count&& indexb >= 0 && indexb < current_vector_count) {
-					myVecD * temp = vector_list[indexa]->copy();
-					temp->sub(vector_list[indexb]);
-					Output->Text += gcnew String(temp->str().c_str());
+					vector_list[indexa]->sub(vector_list[indexb]);
+					Output->Text += gcnew String(vector_list[indexa]->str().c_str());
 					Output->Text += Environment::NewLine;
-					delete temp;
 				}
 				else Output->Text += gcnew String("command handle: add: vector substraction: invalid index input") + Environment::NewLine;
 			}
@@ -411,11 +401,8 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 				int indexa = Convert::ToInt32(userCommand[2]);
 				double scalar = Convert::ToDouble(userCommand[4]);
 				if (indexa < current_matrix_count&& indexa >= 0) {
-					myMatD * mat = new myMatD(matrix_list[indexa]->h, matrix_list[indexa]->w);
-					mat->copy_from(matrix_list[indexa]);
-					mat->mul(scalar);
-					Output->Text += gcnew String(mat->str().c_str()) + Environment::NewLine;
-					delete mat;
+					matrix_list[indexa]->mul(scalar);
+					Output->Text += gcnew String(matrix_list[indexa]->str().c_str()) + Environment::NewLine;
 				}
 				else Output->Text += gcnew String("command handle: mul: matrix scalar multiplication: invalid index input") + Environment::NewLine;
 			}
