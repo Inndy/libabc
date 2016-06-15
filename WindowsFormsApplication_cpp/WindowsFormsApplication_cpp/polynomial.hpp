@@ -17,13 +17,13 @@ private:
     //the min bound and max bound of the interval inwhich we find root
     double root_interval_min;
     double root_interval_max;
-    double step_size = 0.001;
+    double step_size = 0.01;
 public:
     Polynomial(int size){
         this->size = size;
         coefficient = new int[this->size];
-        root_interval_min = -100.0;
-        root_interval_max = 100.0;
+        root_interval_min = -1000.0;
+        root_interval_max = 1000.0;
     }
     ~Polynomial(){
         delete coefficient;

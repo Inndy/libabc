@@ -359,6 +359,7 @@ class Matrix
             /*-----------------------------*/
             //find root for characteristic_polynomial = 0
             //the roots we find are eigen values for the given matrix
+			cout << "hello,world" << endl;
             int root_count;
             double * roots = characteristic_polynomial->root_finding(root_count);
             for (int index = 0; index < root_count; index++) {

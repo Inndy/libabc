@@ -548,6 +548,76 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 		else if (userCommand[0] == "orthbasis") {
 			myVecD::Gram_Schidt(vector_list, current_vector_count);
 		}
+		else if (userCommand[0] == "rank") {
+			if (userCommand[1] == "matrix") {
+				int indexa = Convert::ToInt32(userCommand[2]);
+				if (indexa < current_matrix_count&& indexa >= 0) {
+					int result = matrix_list[indexa]->rank();
+					Output->Text += result + Environment::NewLine;
+				}
+				else Output->Text += gcnew String("command handle: rank:invalid index input");
+			}
+		}
+		else if (userCommand[0] == "trans") {
+			if (userCommand[1] == "matrix") {
+				int indexa = Convert::ToInt32(userCommand[2]);
+				if (indexa < current_matrix_count&& indexa >= 0) {
+					matrix_list[indexa] = matrix_list[indexa]->transpose();
+					Output->Text += gcnew String(matrix_list[indexa]->str().c_str()) + Environment::NewLine;
+				}
+				else Output->Text += gcnew String("command handle: rank:invalid index input");
+			}
+		}
+		else if (userCommand[0] == "solve") {
+			if (userCommand[1] == "matrix"&&userCommand[3] == "vector") {
+				int indexa = Convert::ToInt32(userCommand[2]);
+				int indexb = Convert::ToInt32(userCommand[4]);
+				if (indexa < current_matrix_count&& indexa >= 0 && indexb < current_vector_count&&indexb >= 0) {
+					matrix_list[indexa]->solve_linear_system(vector_list[indexb]);
+					Output->Text += gcnew String(vector_list[indexb]->str().c_str()) + Environment::NewLine;
+				}
+				else Output->Text += gcnew String("command handle: solving linear system:invalid index input");
+			}
+		}
+		else if (userCommand[0] == "det") {
+			if (userCommand[1] == "matrix") {
+				int indexa = Convert::ToInt32(userCommand[2]);
+				if (indexa < current_matrix_count&&indexa >= 0) {
+					double result = matrix_list[indexa]->det();
+					Output->Text += result + Environment::NewLine;
+				}
+				else Output->Text += gcnew String("command handle: determinant:invalid index input");
+			}
+		}
+		else if (userCommand[0] == "inverse") {
+			if (userCommand[1] == "matrix") {
+				int indexa = Convert::ToInt32(userCommand[2]);
+				if (indexa < current_matrix_count&&indexa >= 0) {
+					matrix_list[indexa]->inverse();
+					Output->Text += gcnew String(matrix_list[indexa]->str().c_str()) + Environment::NewLine;
+				}
+				else Output->Text += gcnew String("command handle: matrix inverse:invalid index input");
+			}
+		}
+		else if (userCommand[0] == "leastsquare") {
+			double k, b;
+			myMatD::linear_least_square_method(k, b, vector_list, current_vector_count);
+			Output->Text += gcnew String("y=") + k + gcnew String("*x+") + b + Environment::NewLine;
+		}
+		else if (userCommand[0] == "eigenvalue") {
+			if (userCommand[1] == "matrix") {
+				int indexa = Convert::ToInt32(userCommand[2]);
+				if (indexa < current_matrix_count && indexa >= 0) {
+					std::vector<double> eigenvalues;
+					matrix_list[indexa]->eigen_value(eigenvalues);
+					cout << eigenvalues.size() << endl;
+					for (int _index = 0; _index < eigenvalues.size(); _index++) {
+						Output->Text += eigenvalues[_index] + (_index < eigenvalues.size() - 1 ? gcnew String(",") : gcnew String(""));
+					}
+				}
+				else Output->Text += gcnew String("command handle: matrix inverse:invalid index input");
+			}
+		}
 		else if (userCommand[0] == "cmd") {
 			Output->Text += gcnew String("print vector/matrix int(vectoridx/matrixidx)\r\n    print vector/matrix with index");
 			Output->Text += Environment::NewLine;
@@ -569,6 +639,12 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 			//angle between two vectors
 			//plane normal
 			//orthogonal basis
+			//rank
+			//trans
+			//solve linear system
+			//determinant
+			//inverse of matrix
+			//method of lease square
 		}
 		//反之則判斷找不到指令
 		else
