@@ -356,7 +356,7 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 			//if it's a vector addition
 			else if (userCommand[1] == "vector" && userCommand[3] == "vector") {
 				int indexa = Convert::ToInt32(userCommand[2]); int indexb = Convert::ToInt32(userCommand[4]);
-				if (indexa >= 0 && indexa < current_vector_count&& indexb >= 0 && indexb < current_matrix_count) {
+				if (indexa >= 0 && indexa < current_vector_count&& indexb >= 0 && indexb < current_vector_count) {
 					myVecD * temp = vector_list[indexa]->copy();
 					temp->add(vector_list[indexb]);
 					Output->Text += gcnew String(temp->str().c_str());
@@ -366,9 +366,45 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 				else Output->Text += gcnew String("command handle: add: vector addition: invalid index input") + Environment::NewLine;
 			}
 		}
+		else if (userCommand[0] == "sub") {
+			if (userCommand[1] == "matrix" && userCommand[3] == "matrix") {
+				int indexa = Convert::ToInt32(userCommand[2]); int indexb = Convert::ToInt32(userCommand[4]);
+				if (indexa >= 0 && indexa < current_matrix_count && indexb >= 0 && indexb < current_matrix_count) {
+					myMatD * temp = new myMatD(matrix_list[indexa]->h, matrix_list[indexa]->w);
+					temp->copy_from(matrix_list[indexa]);
+					temp->sub(*matrix_list[indexb]);
+					Output->Text += gcnew String(temp->str().c_str());
+					Output->Text += Environment::NewLine;
+					delete temp;
+				}
+				else Output->Text += gcnew String("command handle: add: matrix substraction: invalid index input") + Environment::NewLine;
+			}
+			//if it's a vector addition
+			else if (userCommand[1] == "vector" && userCommand[3] == "vector") {
+				int indexa = Convert::ToInt32(userCommand[2]); int indexb = Convert::ToInt32(userCommand[4]);
+				if (indexa >= 0 && indexa < current_vector_count&& indexb >= 0 && indexb < current_vector_count) {
+					myVecD * temp = vector_list[indexa]->copy();
+					temp->sub(vector_list[indexb]);
+					Output->Text += gcnew String(temp->str().c_str());
+					Output->Text += Environment::NewLine;
+					delete temp;
+				}
+				else Output->Text += gcnew String("command handle: add: vector substraction: invalid index input") + Environment::NewLine;
+			}
+		}
+		else if (userCommand[0] == "idx") {
+			Output->Text += gcnew String("Avaliable vector index") + current_vector_count +Environment::NewLine;
+			Output->Text += gcnew String("Avaliable matrix index") + current_matrix_count + Environment::NewLine;
+		}
 		else if (userCommand[0] == "clr") {
 			Input->Text = "";
 			Output->Text = "";
+		}
+		else if (userCommand[0] == "dot") {
+			int indexa = Convert::ToInt32(userCommand[1]); int indexb = Convert::ToInt32(userCommand[2]);
+			if (indexa >= 0 && indexa < current_vector_count&&indexb >= 0 && indexb < current_vector_count) {
+				Output->Text += myVecD::dot(vector_list[indexa], vector_list[indexb]) + Environment::NewLine;
+			}else Output->Text += gcnew String("command handle: dot: invalid index input") + Environment::NewLine;
 		}
 		else if (userCommand[0] == "cmd") {
 			Output->Text += gcnew String("print vector/matrix int(vectoridx/matrixidx)\r\n    print vector/matrix with index");
@@ -377,6 +413,8 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 			Output->Text += Environment::NewLine;
 			Output->Text += gcnew String("add matrix/vector int(indexa) matrix/vector int(indexb)");
 			Output->Text += Environment::NewLine;
+			//sub
+			//idx
 		}
 		//反之則判斷找不到指令
 		else

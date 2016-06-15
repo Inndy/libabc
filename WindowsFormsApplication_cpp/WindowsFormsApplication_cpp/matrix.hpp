@@ -113,7 +113,7 @@ class Matrix
             MATRIX_FOREACH(x, y) {
                 this->cell(x, y) -= m(x, y);
             }
-            return &this;
+            return *this;
         }
         //matrix-multiplication
         Matrix& mul(Matrix *m) {
