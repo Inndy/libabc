@@ -406,6 +406,20 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 				Output->Text += myVecD::dot(vector_list[indexa], vector_list[indexb]) + Environment::NewLine;
 			}else Output->Text += gcnew String("command handle: dot: invalid index input") + Environment::NewLine;
 		}
+		else if (userCommand[0] == "mul") {
+			if (userCommand[1] == "matrix" && userCommand[3] == "scalar") {
+				int indexa = Convert::ToInt32(userCommand[2]);
+				double scalar = Convert::ToDouble(userCommand[4]);
+				if (indexa < current_matrix_count&& indexa >= 0) {
+					myMatD * mat = new myMatD(matrix_list[indexa]->h, matrix_list[indexa]->w);
+					mat->copy_from(matrix_list[indexa]);
+					mat->mul(scalar);
+					Output->Text += gcnew String(mat->str().c_str()) + Environment::NewLine;
+					delete mat;
+				}
+				else Output->Text += gcnew String("command handle: mul: matrix scalar multiplication: invalid index input") + Environment::NewLine;
+			}
+		}
 		else if (userCommand[0] == "cmd") {
 			Output->Text += gcnew String("print vector/matrix int(vectoridx/matrixidx)\r\n    print vector/matrix with index");
 			Output->Text += Environment::NewLine;
