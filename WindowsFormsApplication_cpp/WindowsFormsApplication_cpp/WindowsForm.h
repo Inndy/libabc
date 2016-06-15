@@ -339,6 +339,45 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 				else Output->Text += gcnew String("command handle: print: vector: invalid index of matrix") + Environment::NewLine;
 			}
 		}
+		else if (userCommand[0] == "add") {
+			//if it's a matrix addition
+			if (userCommand[1] == "matrix" && userCommand[3] == "matrix") {
+				int indexa = Convert::ToInt32(userCommand[2]); int indexb = Convert::ToInt32(userCommand[4]);
+				if (indexa >= 0 && indexa < current_matrix_count && indexb >= 0 && indexb < current_matrix_count) {
+					myMatD * temp = new myMatD(matrix_list[indexa]->h, matrix_list[indexa]->w);
+					temp->copy_from(matrix_list[indexa]);
+					temp->add(*matrix_list[indexb]);
+					Output->Text += gcnew String(temp->str().c_str());
+					Output->Text += Environment::NewLine;
+					delete temp;
+				}
+				else Output->Text += gcnew String("command handle: add: matrix addition: invalid index input") + Environment::NewLine;
+			}
+			//if it's a vector addition
+			else if (userCommand[1] == "vector" && userCommand[3] == "vector") {
+				int indexa = Convert::ToInt32(userCommand[2]); int indexb = Convert::ToInt32(userCommand[4]);
+				if (indexa >= 0 && indexa < current_vector_count&& indexb >= 0 && indexb < current_matrix_count) {
+					myVecD * temp = vector_list[indexa]->copy();
+					temp->add(vector_list[indexb]);
+					Output->Text += gcnew String(temp->str().c_str());
+					Output->Text += Environment::NewLine;
+					delete temp;
+				}
+				else Output->Text += gcnew String("command handle: add: vector addition: invalid index input") + Environment::NewLine;
+			}
+		}
+		else if (userCommand[0] == "clr") {
+			Input->Text = "";
+			Output->Text = "";
+		}
+		else if (userCommand[0] == "cmd") {
+			Output->Text += gcnew String("print vector/matrix int(vectoridx/matrixidx)\r\n    print vector/matrix with index");
+			Output->Text += Environment::NewLine;
+			Output->Text += gcnew String("clr\r\n    clean Input and Output box");
+			Output->Text += Environment::NewLine;
+			Output->Text += gcnew String("add matrix/vector int(indexa) matrix/vector int(indexb)");
+			Output->Text += Environment::NewLine;
+		}
 		//反之則判斷找不到指令
 		else
 		{
