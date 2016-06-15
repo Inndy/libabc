@@ -174,11 +174,11 @@ class Tokenizer
         int p;
 
         bool available() { return this->p < this->data.length(); }
-        char peek(int offset=0) { return this->data[this->p+offset]; }
-        char next(int offset=0) { return this->data[++this->p+offset]; }
+        char peek(int offset = 0) { return this->data[this->p+offset]; }
+        char next(int offset = 0) { return this->data[++this->p+offset]; }
         char eat_space() { char ch = this->peek(); while(ch == ' ' || ch == '\t') ch = this->next(); return ch; }
         void add_token(Token *token) { this->tokens.push_back(token); }
-        CharType peek_chartype(int offset=0) { return TokenCharType(this->peek(offset)); }
+        CharType peek_chartype(int offset = 0) { return TokenCharType(this->peek(offset)); }
 
         char next_identity_char()
         {

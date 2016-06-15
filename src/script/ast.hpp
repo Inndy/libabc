@@ -74,7 +74,7 @@ class ASTParser
         vector<ASTNode*> ast;
         int p;
 
-        Token* peek(int offset=0) { return this->tokens[this->p+offset]; }
+        Token* peek(int offset = 0) { return this->tokens[this->p+offset]; }
         Token* next() { return this->tokens[++this->p]; }
         bool available() { return this->p < this->tokens.size(); }
         void add_node(ASTNode* node) { this->ast.push_back(node); }
