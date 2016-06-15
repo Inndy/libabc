@@ -435,6 +435,119 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 				else Output->Text += gcnew String("command handle: mul: vector scalar multiplication: invalid index input");
 			}
 		}
+		else if (userCommand[0] == "norm") {
+			if (userCommand[1] == "vector")
+			{
+				int indexa = Convert::ToInt32(userCommand[2]);
+				if (indexa < current_vector_count&& indexa >= 0) {
+					double result = vector_list[indexa]->norm();
+					Output->Text += result + Environment::NewLine;
+				}
+				else Output->Text += gcnew String("command handle: norm: invalid index input");
+			}
+		}
+		else if (userCommand[0] == "normalize") {
+			if (userCommand[1] == "vector") {
+				int indexa = Convert::ToInt32(userCommand[2]);
+				if (indexa < current_vector_count && indexa >= 0) {
+					vector_list[indexa]->normalize();
+					Output->Text += gcnew String(vector_list[indexa]->str().c_str())+Environment::NewLine;
+				}
+				else Output->Text += gcnew String("command handle: normalize: invalid index input");
+			}
+		}
+		else if (userCommand[0] == "cross") {
+			if (userCommand[1] == "vector"&& userCommand[3] == "vector") {
+				int indexa = Convert::ToInt32(userCommand[2]);
+				int indexb = Convert::ToInt32(userCommand[4]);
+				if (indexa < current_vector_count && indexa >= 0 && indexb < current_vector_count && indexb >= 0)
+				{
+					vector_list[indexa] = myVecD::crossProduct(vector_list[indexa], vector_list[indexb]);
+					Output->Text += gcnew String(vector_list[indexa]->str().c_str()) + Environment::NewLine;
+				}
+				else Output->Text += gcnew String("command handle: cross product: invalid index input");
+			}
+		}
+		else if (userCommand[0] == "component") {
+			if (userCommand[1] == "vector" && userCommand[3] == "vector") {
+				int indexa = Convert::ToInt32(userCommand[2]);
+				int indexb = Convert::ToInt32(userCommand[4]);
+				if (indexa < current_vector_count && indexa >= 0 && indexb < current_vector_count && indexb >= 0) {
+					double result = vector_list[indexa]->componentOn(vector_list[indexb]);
+					Output->Text += result + Environment::NewLine;
+				}
+				else Output->Text += gcnew String("command handle: component : invalid index input");
+			}
+		}
+		else if (userCommand[0] == "projection") {
+			if (userCommand[1] == "vector" && userCommand[3] == "vector") {
+				int indexa = Convert::ToInt32(userCommand[2]);
+				int indexb = Convert::ToInt32(userCommand[4]);
+				if (indexa < current_vector_count && indexa >= 0 && indexb < current_vector_count && indexb >= 0) {
+					vector_list[indexa] = vector_list[indexa]->projectionOn(vector_list[indexb]);
+					Output->Text += gcnew String(vector_list[indexa]->str().c_str()) + Environment::NewLine;
+				}
+				else Output->Text += gcnew String("command handle: projection : invalid index input");
+			}
+		}
+		else if (userCommand[0] == "triangle") {
+			if (userCommand[1] == "vector" && userCommand[3] == "vector") {
+				int indexa = Convert::ToInt32(userCommand[2]);
+				int indexb = Convert::ToInt32(userCommand[4]);
+				if (indexa < current_vector_count && indexa >= 0 && indexb < current_vector_count && indexb >= 0) {
+					double result = myVecD::triangleArea(vector_list[indexa], vector_list[indexb]);
+					Output->Text += result + Environment::NewLine;
+				}
+				else Output->Text += gcnew String("command handle: triangle area : invalid index input");
+			}
+		}
+		else if (userCommand[0] == "para") {
+			if (userCommand[1] == "vector" && userCommand[3] == "vector") {
+				int indexa = Convert::ToInt32(userCommand[2]);
+				int indexb = Convert::ToInt32(userCommand[4]);
+				if (indexa < current_vector_count && indexa >= 0 && indexb < current_vector_count && indexb >= 0) {
+					bool flag = myVecD::para_judge(vector_list[indexa], vector_list[indexb]);
+					Output->Text += (flag?gcnew String("true"):gcnew String("false")) + Environment::NewLine;
+				}
+				else Output->Text += gcnew String("command handle: parallel judge : invalid index input");
+			}
+		}
+		else if (userCommand[0] == "orth") {
+			if (userCommand[1] == "vector" && userCommand[3] == "vector") {
+				int indexa = Convert::ToInt32(userCommand[2]);
+				int indexb = Convert::ToInt32(userCommand[4]);
+				if (indexa < current_vector_count && indexa >= 0 && indexb < current_vector_count && indexb >= 0) {
+					bool flag = myVecD::orth_judge(vector_list[indexa], vector_list[indexb]);
+					Output->Text += (flag ? gcnew String("true") : gcnew String("false")) + Environment::NewLine;
+				}
+				else Output->Text += gcnew String("command handle:orthogonal judge:invalid index input");
+			}
+		}
+		else if (userCommand[0] == "angle") {
+			if (userCommand[1] == "vector" && userCommand[3] == "vector") {
+				int indexa = Convert::ToInt32(userCommand[2]);
+				int indexb = Convert::ToInt32(userCommand[4]);
+				if (indexa < current_vector_count && indexa >= 0 && indexb < current_vector_count && indexb >= 0) {
+					double angle = myVecD::angleBetween(vector_list[indexa], vector_list[indexb]);
+					Output->Text += angle + Environment::NewLine;
+				}
+				else Output->Text += gcnew String("command handle: angle between two vectors:invalid index input");
+			}
+		}
+		else if (userCommand[0] == "planenorm") {
+			if (userCommand[1] == "vector" && userCommand[3] == "vector") {
+				int indexa = Convert::ToInt32(userCommand[2]);
+				int indexb = Convert::ToInt32(userCommand[4]);
+				if (indexa < current_vector_count && indexa >= 0 && indexb < current_vector_count && indexb >= 0) {
+					vector_list[indexa] = myVecD::normal_vector_of_plane2v(vector_list[indexa], vector_list[indexb]);
+					Output->Text += gcnew String(vector_list[indexa]->str().c_str()) + Environment::NewLine;
+				}
+				else Output->Text += gcnew String("command handle: plane norm:invalid index input");
+			}
+		}
+		else if (userCommand[0] == "orthbasis") {
+			myVecD::Gram_Schidt(vector_list, current_vector_count);
+		}
 		else if (userCommand[0] == "cmd") {
 			Output->Text += gcnew String("print vector/matrix int(vectoridx/matrixidx)\r\n    print vector/matrix with index");
 			Output->Text += Environment::NewLine;
@@ -444,6 +557,18 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 			Output->Text += Environment::NewLine;
 			//sub
 			//idx
+			//mul
+			//norm
+			//normalize
+			//cross-product
+			//component
+			//projection
+			//triangle area
+			//parallel judge
+			//orthogonal judge
+			//angle between two vectors
+			//plane normal
+			//orthogonal basis
 		}
 		//反之則判斷找不到指令
 		else
