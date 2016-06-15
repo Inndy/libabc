@@ -406,6 +406,34 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 				}
 				else Output->Text += gcnew String("command handle: mul: matrix scalar multiplication: invalid index input") + Environment::NewLine;
 			}
+			else if (userCommand[1] == "matrix" && userCommand[3] == "matrix") {
+				int indexa = Convert::ToInt32(userCommand[2]);
+				int indexb = Convert::ToInt32(userCommand[4]);
+				if (indexa < current_matrix_count && indexa >= 0 && indexb < current_matrix_count&&indexb >= 0)
+				{
+					myMatD mat = matrix_list[indexa]->mul(matrix_list[indexb]);
+					Output->Text += gcnew String(mat.str().c_str()) + Environment::NewLine;
+				}
+				else Output->Text += gcnew String("command handle: mul: matrix multiplication: invalid index input");
+			}
+			else if (userCommand[1] == "matrix" && userCommand[3] == "vector") {
+				int indexa = Convert::ToInt32(userCommand[2]);
+				int indexb = Convert::ToInt32(userCommand[4]);
+				if (indexa < current_matrix_count&& indexa >= 0 && indexb < current_vector_count&&indexb >= 0) {
+					myVecD vec = matrix_list[indexa]->mul(vector_list[indexb]);
+					Output->Text += gcnew String(vec.str().c_str()) + Environment::NewLine;
+				}
+				else Output->Text += gcnew String("command handle: mul: matrix mul vec: invalid index input");
+			}
+			else if (userCommand[1] == "vector" && userCommand[3] == "scalar") {
+				int indexa = Convert::ToInt32(userCommand[2]);
+				double scalar = Convert::ToDouble(userCommand[4]);
+				if (indexa < current_matrix_count&&indexa >= 0) {
+					vector_list[indexa]->mul(scalar);
+					Output->Text += gcnew String(vector_list[indexa]->str().c_str()) + Environment::NewLine;
+				}
+				else Output->Text += gcnew String("command handle: mul: vector scalar multiplication: invalid index input");
+			}
 		}
 		else if (userCommand[0] == "cmd") {
 			Output->Text += gcnew String("print vector/matrix int(vectoridx/matrixidx)\r\n    print vector/matrix with index");
