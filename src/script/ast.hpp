@@ -328,10 +328,8 @@ class ASTParser
 
             while(this->available()) {
                 t = this->peek();
-                cout << "p = " << this->p << endl;
                 switch(t->type_id) {
                     case T_Var:
-                        cout << "Var" << endl;
                         if(!this->parse_var())
                             return false;
                         break;
@@ -340,11 +338,9 @@ class ASTParser
                         {
                             TokenType tt = this->peek(1)->type_id;
                             if(tt == T_Assign) {
-                                cout << "Assign" << endl;
                                 if(!this->parse_assignment())
                                     return false;
                             } else if(tt == T_Pair && ((TPair*)this->peek(1))->type == '(') {
-                                cout << "Call" << endl;
                                 if(!this->parse_calling())
                                     return false;
                             } else {
