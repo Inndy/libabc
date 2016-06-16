@@ -159,30 +159,6 @@ string Token::to_string()
     }
 }
 
-// class TokenObject
-// {
-//     public:
-//         const TokenType type_id;
-//         Token * const object;
-//         TokenObject(Token *object) : object(object), type_id(object->type_id) {}
-// //        TokenObject(TokenObject& obj) : object(obj.object), type_id(obj.type_id) {}
-//         Token *get() { return (Token*)this->object; }
-//         string to_string()
-//         {
-//             switch(((Token*)object)->type_id) {
-//                 case T_Assign:   return ((TAssign*)object)->to_string();
-//                 case T_End:      return ((TEnd*)object)->to_string();
-//                 case T_Identity: return ((TIdentity*)object)->to_string();
-//                 case T_Operator: return ((TOperator*)object)->to_string();
-//                 case T_Pair:     return ((TPair*)object)->to_string();
-//                 case T_Value:    return ((TValue*)object)->to_string();
-//                 case T_Var:      return ((TVar*)object)->to_string();
-//                 case T_Comma:    return ((TComma*)object)->to_string();
-//                 default:         return string("<Unknow>");
-//             }
-//         }
-// };
-
 class Tokenizer
 {
     private:
