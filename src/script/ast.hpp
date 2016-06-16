@@ -179,6 +179,7 @@ class ASTParser
                     return true;
                 }
             }
+            cerr << "ASTParser::parse_var(): Unexpected ending" << endl;
             return false;
         }
 
@@ -211,13 +212,13 @@ class ASTParser
                         *out = new AExprValue(((TValue*)this->tokens[from])->as_double());
                         return true;
                     default:
-                        cerr << "invalid atomic-expr token: " << this->tokens[from]->to_string() << endl;
+                        cerr << "ASTParser::parse_expr(): invalid atomic-expr token: " << this->tokens[from]->to_string() << endl;
                         return false;
                 }
             }
 
             if(level > 3) {
-                cerr << "parse_expr(): level out of range" << endl;
+                cerr << "ASTParser::parse_expr(): level out of range" << endl;
                 return false;
             }
 
@@ -232,7 +233,7 @@ class ASTParser
                             i = pair->pos + 1; // jump out of pair
                             break;
                         } else {
-                            cerr << "invalid TPair at p = " << i << endl;
+                            cerr << "ASTParser::parse_expr(): invalid TPair at p = " << i << endl;
                             return false;
                         }
                     case T_Operator:
@@ -273,6 +274,7 @@ class ASTParser
             AExpr *expr = NULL;
             int p_end = this->find_end(); // [p, p_end)
             if(p_end == -1) {
+                cerr << "ASTParser::parse_assignment(): T_End not found" << endl;
                 return false;
             }
             if(!this->parse_expr(&expr, this->p, p_end - 1)) {
@@ -357,6 +359,7 @@ class ASTParser
                                     return false;
                                 }
                             } else {
+                                cerr << "ASTParser::parse(): Unexpected token type (" << TokenTypeToString(tt) << ") after T_Identity" << endl;
                                 return false;
                             }
                         }
@@ -367,7 +370,7 @@ class ASTParser
                         break;
 
                     default:
-                        cerr << "Invalid type: " << TokenTypeToString(t->type_id) << " at p = " << this->p << endl;
+                        cerr << "ASTParser::parse(): Invalid type: " << TokenTypeToString(t->type_id) << " at p = " << this->p << endl;
                         return false;
                 }
             }
