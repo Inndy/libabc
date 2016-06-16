@@ -83,7 +83,7 @@ string AExpr::to_string()
     }
 }
 
-string AExprVariable::to_string() { return "Var(" + this->name + ")"; }
+string AExprVariable::to_string() { return this->name; }
 string AExprValue::to_string() { return ::to_string(this->value); }
 string AExprBop::to_string() { return "( " + this->lvalue->to_string() + " " + this->op + " " + this->rvalue->to_string() + " )"; }
 
@@ -100,7 +100,7 @@ class AAssign : public ASTNode
 {
     public:
         const string variable;
-        const AExpr *expr;
+        AExpr * const expr;
         AAssign(string variable, AExpr *expr) : ASTNode(A_Assign), variable(variable), expr(expr) {}
         string to_string();
 };
@@ -117,10 +117,16 @@ string ASTNode::to_string()
 {
     switch(this->type_id) {
         case A_Var: return ((AVar*)this)->to_string();
+        case A_Assign: return ((AAssign*)this)->to_string();
         case A_Expr: return ((AExpr*)this)->to_string();
         case A_Call: return ((ACall*)this)->to_string();
         default: return "<Unknow ASTNode>";
     }
+}
+
+string AAssign::to_string()
+{
+    return this->variable + " = " + (this->expr->to_string()) + ";";
 }
 
 string AVar::to_string()
@@ -141,7 +147,6 @@ class ASTParser
 {
     private:
         vector<Token*> tokens;
-        vector<ASTNode*> ast;
         int p;
 
         Token* peek(int offset = 0) { return this->tokens[this->p+offset]; }
@@ -262,7 +267,7 @@ class ASTParser
             this->next(); // skip TAssign
 
             AExpr *expr = NULL;
-            int p_end = this->find_end();
+            int p_end = this->find_end(); // [p, p_end)
             if(p_end == -1) {
                 return false;
             }
@@ -278,15 +283,43 @@ class ASTParser
 
         bool parse_calling()
         {
-            while(this->available()) {
-                cout << "    " << this->peek()->to_string() << endl;
-                if(this->next()->type_id == T_End)
-                    return true;
+            string func = ((TIdentity*)this->peek())->name;
+            TPair *pair = (TPair*)this->peek(1);
+            this->next(); // skip func name
+            this->next(); // skip L-pair
+
+            int i, last, p_end = pair->pos + 1; // range is [p, p_end)
+
+            AExpr *exp;
+            vector<AExpr*> args;
+
+            last = this->p;
+            for(i = this->p; i < p_end; i++) {
+                switch(this->tokens[i]->type_id)
+                {
+                    case T_Pair:
+                        pair = (TPair*)this->tokens[i];
+                        if(pair->type == '(') {
+                            i = pair->pos; // jump to end of pair
+                            break;
+                        } // else -> same as T_Comma
+                    case T_Comma:
+                        exp = NULL;
+                        if(!parse_expr(&exp, last, i-1)) return false;
+                        args.push_back(exp);
+                        last = i + 1;
+                    default:
+                        ;
+                }
             }
-            return false;
+
+            this->p = p_end;
+            this->add_node(new ACall(func, args));
+            return true;
         }
 
     public:
+        vector<ASTNode*> ast;
         ASTParser(Tokenizer& tokenizer) : tokens(tokenizer.tokens) {  }
         bool parse()
         {
