@@ -76,20 +76,13 @@ public:
             // read the matrix, read one row a time
             for(int row_flag = 0; row_flag < row; row_flag++){
 				for (int col_flag = 0; col_flag < column; col_flag++) {
-					cout << "reading cell (" << row_flag << "," << col_flag<<")";
 					double element_temp;
 					filestream >> element_temp;
-					cout << element_temp << endl;
 					matrices[index]->cell(row_flag, col_flag) = element_temp;
 				}
                 
             }
         }
-		cout << "breaking point 0" << endl;
-		for (int index = 0; index < matrix_count; index++) {
-			cout << matrices[index]->str() << endl;
-		}
-		cout << "breaking point 1" << endl;
         return matrices;
     }
     
