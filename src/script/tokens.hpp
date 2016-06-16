@@ -12,7 +12,7 @@ using namespace std;
 // X in [A, B]
 #define IN_RANGE(A, X, B) ((A) <= (X) && (X) <= (B))
 
-enum TokenType { T_Token, T_Identity, T_Operator, T_Value, T_Var, T_Pair, T_Assign, T_End, T_Comma };
+enum TokenType { T_Unknow, T_Identity, T_Operator, T_Value, T_Var, T_Pair, T_Assign, T_End, T_Comma };
 enum CharType { C_Unknow, C_Number, C_Alphabet, C_Underscore, C_Dot, C_Operator, C_Pair, C_Assign, C_End, C_Comma };
 
 CharType TokenCharType(char ch)
@@ -84,6 +84,22 @@ class TOperator : public Token
         const string op;
         TOperator(string op) : op(op), Token(T_Operator) {  }
         string to_string() { return "<" + this->get_type_str() + "('" + this->op + "')>"; }
+        int level()
+        {
+            switch(this->op[0]) {
+                case '+':
+                case '-':
+                    return 1;
+                case '*':
+                case '/':
+                case '%':
+                    return 2;
+                case '^':
+                    return 3;
+                default:
+                    return -1;
+            }
+        }
 };
 
 class TValue : public Token
@@ -246,6 +262,7 @@ class Tokenizer
             this->p = 0;
 
             stack<int> pairs;
+            int pair_count = 0;
 
             while(true) {
                 char ch = eat_space();
@@ -277,12 +294,18 @@ class Tokenizer
                     case C_Pair:
                         if(ch == '(') {
                             pairs.push(this->tokens.size());
+                            pair_count++;
                             this->add_token(new TPair(-1, '('));
                             this->next();
                         } else if(ch == ')') {
+                            pair_count--;
+                            if(pair_count < 0) return false;
                             int p = pairs.top();
                             pairs.pop();
-                            assert(this->tokens[p]->type_id == T_Pair);
+                            if(this->tokens[p]->type_id != T_Pair) {
+                                // should not ever happen!
+                                return false;
+                            }
                             TPair *another = (TPair*)this->tokens[p];
                             assert(another->type_id == T_Pair);
                             another->pos = this->tokens.size();
@@ -292,6 +315,9 @@ class Tokenizer
                         break;
 
                     case C_End:
+                        if(pair_count > 0) {
+                            return false;
+                        }
                         this->add_token(new TEnd());
                         this->next();
                         break;
