@@ -2,7 +2,7 @@
  */
 #ifndef util_hpp
 #define util_hpp
-#define fatal(mesg) { std::cerr << mesg << std::endl; exit(1); }
+#define fatal(mesg) { std::cerr << mesg << std::endl;  }
 #define myVecD myVector<double>
 #define myMatD Matrix<double>
 

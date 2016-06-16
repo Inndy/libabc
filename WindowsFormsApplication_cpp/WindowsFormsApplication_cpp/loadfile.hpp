@@ -48,8 +48,9 @@ public:
         char * temp = new char[MAX_SINGLE_ELEMENT_LENGTH];
     //=======================
         /* read how many matrices in this file */
-        filestream.getline(temp,MAX_SINGLE_ELEMENT_LENGTH,'\n');
-        int matrix_count = atoi(temp);
+        //filestream.getline(temp,MAX_SINGLE_ELEMENT_LENGTH,'\n');
+		int matrix_count;
+		filestream >> matrix_count;
     //=======================
         /* build matrices array */
         matrices = new Matrix<double> *[matrix_count];
@@ -59,47 +60,36 @@ public:
          * the following loop read one matrix a time
          */
         for (int index = 0; index < matrix_count; index ++) {
+			cout << "hello, world" << endl;
             // read and check the 'M' that stand for a matrix
-            filestream.getline(temp, MAX_SINGLE_ELEMENT_LENGTH, '\n');
-
+			filestream >> temp;
+			cout << "temp" << temp << endl;
             if (!(temp[0] == 'M' || temp[0] == 'm')) {
                 fatal("Finding non-matrix element in matrix file");
             }
+			int row, column;
             // read the row and column information abount the current matrix
-            filestream.getline(temp, MAX_SINGLE_ELEMENT_LENGTH, ' ');
-            int row = atoi(temp);
-            filestream.getline(temp, MAX_SINGLE_ELEMENT_LENGTH, '\n');
-            int column = atoi(temp);
+			filestream >> row; filestream >> column;
             // construct current matrix
             matrices[index] = new Matrix<double>(row,column);
+			cout << "row = " << row << "col = " << column << endl;
             // read the matrix, read one row a time
             for(int row_flag = 0; row_flag < row; row_flag++){
-                filestream.getline(temp, MAX_SINGLE_ELEMENT_LENGTH,'\n');
-                bool flag = false;//new data avaliable when true
-                vector<char> v;
-                int column_flag = 0;
-                for (int count = 0; count < strlen(temp)+1; count ++) {
-                    if(isNumberChar(temp[count])){
-                        flag = true;
-                        v.push_back(temp[count]);
-                    }
-                    if(((!isNumberChar(temp[count])) || count == strlen(temp)) && flag){
-                        flag = false;
-                        char * tempb
-							 = new char[v.size()+1];
-                        for (int convert_index = 0; convert_index < v.size(); convert_index++) {
-                            tempb[convert_index] = v[convert_index];
-                        }
-                        tempb[v.size()] = '\0';
-                        matrices[index]->cell(row_flag,column_flag) = atof(tempb);
-                        column_flag++;
-                        v.clear();
-                    }
-                }
+				for (int col_flag = 0; col_flag < column; col_flag++) {
+					cout << "reading cell (" << row_flag << "," << col_flag<<")";
+					double element_temp;
+					filestream >> element_temp;
+					cout << element_temp << endl;
+					matrices[index]->cell(row_flag, col_flag) = element_temp;
+				}
+                
             }
         }
-
-        delete [] temp;
+		cout << "breaking point 0" << endl;
+		for (int index = 0; index < matrix_count; index++) {
+			cout << matrices[index]->str() << endl;
+		}
+		cout << "breaking point 1" << endl;
         return matrices;
     }
     

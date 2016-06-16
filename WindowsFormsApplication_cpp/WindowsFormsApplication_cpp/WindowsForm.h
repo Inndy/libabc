@@ -741,10 +741,6 @@ private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::Co
 		LoadFile * lf = new LoadFile(tempFileName.c_str());
 		matrix_list = lf->load_matrix(current_matrix_count);
 		delete lf;
-		if (1) {
-			for (int index = 0; index < current_matrix_count; index++)
-				cout << matrix_list[index]->str() << index++;
-		}
 	}
 }
 private: System::Void loadMatrixToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
