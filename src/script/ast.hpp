@@ -195,7 +195,9 @@ class ASTParser
                 pair = (TPair*)this->tokens[from];
                 if(pair->pos == until) {
                     // skip pairs and reset level
-                    return this->parse_expr(out, from+1, until-1, 1);
+                    from++;
+                    until--;
+                    level = 1;
                 }
             }
 
