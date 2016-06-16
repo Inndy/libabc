@@ -260,8 +260,10 @@ class ASTParser
             return true;
         }
 
-        bool parse_assignment()
+        bool parse_assignment(ASTNode **out)
         {
+            *out = NULL;
+
             string variable = ((TIdentity*)this->peek())->name;
             this->next(); // skip variable name
             this->next(); // skip TAssign
@@ -277,12 +279,14 @@ class ASTParser
 
             this->p = p_end;
 
-            this->add_node(new AAssign(variable, expr));
+            *out = new AAssign(variable, expr);
             return true;
         }
 
-        bool parse_calling()
+        bool parse_calling(ASTNode **out)
         {
+            *out = NULL;
+
             string func = ((TIdentity*)this->peek())->name;
             TPair *pair = (TPair*)this->peek(1);
             this->next(); // skip func name
@@ -314,7 +318,7 @@ class ASTParser
             }
 
             this->p = p_end;
-            this->add_node(new ACall(func, args));
+            *out = new ACall(func, args);
             return true;
         }
 
@@ -325,6 +329,7 @@ class ASTParser
         {
             this->p = 0;
             Token *t;
+            ASTNode* node;
 
             while(this->available()) {
                 t = this->peek();
@@ -338,11 +343,17 @@ class ASTParser
                         {
                             TokenType tt = this->peek(1)->type_id;
                             if(tt == T_Assign) {
-                                if(!this->parse_assignment())
+                                if(this->parse_assignment(&node)) {
+                                    this->add_node(node);
+                                } else {
                                     return false;
+                                }
                             } else if(tt == T_Pair && ((TPair*)this->peek(1))->type == '(') {
-                                if(!this->parse_calling())
+                                if(this->parse_calling(&node)) {
+                                    this->add_node(node);
+                                } else {
                                     return false;
+                                }
                             } else {
                                 return false;
                             }
