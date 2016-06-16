@@ -203,6 +203,9 @@ class Tokenizer
                 case C_Number:
                 case C_Dot:
                     return this->next(-1);
+                case C_Operator:
+                    if(this->peek() == '-')
+                        return this->next(-1);
                 default:
                     return '\0';
             }
@@ -216,7 +219,9 @@ class Tokenizer
             while(true) {
                 ch = this->next_numeric_char();
                 if(ch) {
-                    if(ch == '.') {
+                    if(ch == '-' && v.size() > 0) {
+                        return v;
+                    } else if(ch == '.') {
                         if(has_dot) {
                             return v;
                         }
@@ -327,6 +332,16 @@ class Tokenizer
                                 }
                                 this->next();
                                 this->next();
+                                break;
+                            }
+                        } else if (ch == '-' && this->peek_chartype(1) == C_Number) {
+                            Token *prev_token = this->tokens[this->tokens.size() - 1];
+
+                            if(prev_token->type_id == T_Operator ||
+                               prev_token->type_id == T_Assign ||
+                               (prev_token->type_id == T_Pair && ((TPair*)prev_token)->type == '(')
+                              ) {
+                                this->add_token(new TValue(get_numeric_value()));
                                 break;
                             }
                         }
