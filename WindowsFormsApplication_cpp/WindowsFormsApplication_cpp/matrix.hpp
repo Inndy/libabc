@@ -17,7 +17,7 @@
 
 #define MATRIX_FOREACH(I, J) \
             for(auto I = 0; I < this->h; I++) \
-                for(auto J = 0; J < this->h; J++)
+                for(auto J = 0; J < this->w; J++)
 #define MATRIX_SIZE_MATCH(M) \
             ((M)->w != this->w || (M)->h != this->h)
 #define MATRIX_SIZE_SHOULD_BE_SAME(M) \
@@ -90,11 +90,11 @@ class Matrix
 
         // data accessor
         T& operator() (int x, int y) {
-            return this->data[x * this->h + y];
+            return this->data[x * this->w + y];
         }
 
         T& cell(int x, int y) {
-            return this->data[x * this->h + y];
+            return this->data[x * this->w + y];
         }
 
 
