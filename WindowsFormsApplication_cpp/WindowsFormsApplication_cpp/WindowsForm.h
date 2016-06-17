@@ -600,9 +600,13 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 			}
 		}
 		else if (userCommand[0] == "leastsquare") {
-			double k, b;
-			myMatD::linear_least_square_method(k, b, vector_list, current_vector_count);
-			Output->Text += gcnew String("y=") + k + gcnew String("*x+") + b + Environment::NewLine;
+			if (userCommand[1] == "matrix" && userCommand[3] == "matrix") {
+				int indexa = Convert::ToInt32(userCommand[2]); int indexb = Convert::ToInt32(userCommand[4]);
+				if (indexa < current_matrix_count&&indexa >= 0 && indexb < current_matrix_count && indexb >= 0) {
+					myVecD * vec = myMatD::linear_least_square_method(matrix_list[indexa], matrix_list[indexb]);
+					Output->Text += gcnew String(vec->str().c_str()) + Environment::NewLine;
+				}
+			}
 		}
 		else if (userCommand[0] == "eigenvalue") {
 			if (userCommand[1] == "matrix") {

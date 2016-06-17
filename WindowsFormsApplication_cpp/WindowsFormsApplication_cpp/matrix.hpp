@@ -534,33 +534,25 @@ class Matrix
         
     }
     //matrix-least-square
-    static void linear_least_square_method(double &a,double &b,myVecD ** points, int size){
-        int n = size;
-        double xj = 0,xj_square = 0,yj = 0,xjyj = 0;
-
-        for(int index = 0; index < n;index++){
-            if(points[index]->size != 2){
-                fatal("matrix: linear_least_square_mthod: point dimension unmatch");
-            }
-            xj += (*points[index])[0];
-            std::cout << xj << std::endl;
-            xj_square += (*points[index])[0]*(*points[index])[0];
-            yj += (*points[index])[1];
-            xjyj += (*points[index])[0]*(*points[index])[1];
-        }
-
-        myMatD * mat = new myMatD(2,2);
-        mat->cell(0,0) = 1.0*n;
-        mat->cell(0,1) = xj;
-        mat->cell(1,0) = xj;
-        mat->cell(1,1) = xj_square;
-
-        myVecD* vec = new myVecD(2);
-        (*vec)[0] = yj;
-        (*vec)[1] = xjyj;
-        std::cout << n << "," <<xj<<"," <<xj_square << "," <<yj <<"," << xjyj <<std::endl;
-        gauss_jordan_elimination(*mat,*vec);
-        a = (*vec)[0]; b = (*vec)[1];
+    static myVecD* linear_least_square_method(myMatD * A, myMatD * b){
+		myVecD * vec = new myVecD(b->h);
+		myMatD * mat = A->transpose();
+		for (int index = 0; index < b->h; index++) {
+			(*vec)[index] = b->cell(index, 0);
+		}
+		myVecD result = mat->mul(vec);//TODO
+		myMatD mat2 = mat->mul(A);
+		cout << mat->str() << endl;
+		cout << vec->str() << endl;
+		cout << result.str() << endl;
+		myVecD * new_result = new myVecD(result.size);
+		
+		for (int index = 0; index < result.size; index++) {
+			(*new_result)[index] = result[index];
+		}
+		gauss_jordan_elimination(mat2, *new_result);
+		cout << new_result->str() << endl;
+		return new_result;
     }
     
     static myMatD * Identity_matrix(int n){

@@ -60,7 +60,6 @@ public:
          * the following loop read one matrix a time
          */
         for (int index = 0; index < matrix_count; index ++) {
-			cout << "hello, world" << endl;
             // read and check the 'M' that stand for a matrix
 			filestream >> temp;
 			cout << "temp" << temp << endl;
@@ -72,7 +71,6 @@ public:
 			filestream >> row; filestream >> column;
             // construct current matrix
             matrices[index] = new Matrix<double>(row,column);
-			cout << "row = " << row << "col = " << column << endl;
             // read the matrix, read one row a time
             for(int row_flag = 0; row_flag < row; row_flag++){
 				for (int col_flag = 0; col_flag < column; col_flag++) {
