@@ -272,6 +272,60 @@ class Matrix
         double det(){
             return det(this);
         }
+		void power_method(std::vector<myVecD*> &eigenvectors, std::vector<double>& eigenvalues) {
+			if (this->w == this -> h) {
+				for (int index = 0; index < this->w; index++) {
+					myVecD * eigenVector = new myVecD(this->h);
+					double eigenValue;
+					this->power_method(eigenVector, eigenValue);
+					eigenvectors.push_back(eigenVector);
+					eigenvalues.push_back(eigenValue);
+					myMatD * mat = new myMatD(this->h, this->w);
+
+					int row;
+					bool break_flag = false;
+					for (row = 0; row < this->h; row++) {
+						for (int indexa = 0; indexa < this->w; indexa++) {
+							if (this->cell(row, indexa) != 0)
+							{
+								break_flag = true;
+							}
+						}
+						if (break_flag) break;
+					}
+
+					for (int indexa = 0; indexa < mat->h; indexa++) {
+						for (int indexb = 0; indexb < mat->w; indexb++) {
+							mat->cell(indexa, indexb) = this->cell(row, indexb)*(*eigenVector)[indexa];
+						}
+					}
+					cout << mat->str()<<endl;
+					mat->mul(1/(*eigenVector)[row]);
+					this->sub(*mat);
+					cout << "new this" << this->str() << endl;
+				}
+			}
+		}
+		void power_method(myVecD * eigenVector, double & eigenvalue) {
+			myVecD temp(this->w);
+			for (int index = 0; index < temp.size; index++) {
+				temp[index] = 1;
+			}
+			for (int index = 0; index < 100; index++) {
+				temp = this->mul(&temp);
+				temp.normalize();
+			}
+			eigenvalue = this->mul(&temp).norm();
+			temp = this->mul(&temp);
+			temp.normalize();
+			for (int index = 0; index < temp.size; index++) {
+				(*eigenVector)[index] = temp[index];
+			}
+
+			cout << temp.str() << endl;
+			cout << this->mul(&temp).norm()<< endl;
+		}
+
         double static det(myMatD * matrix){
             if (matrix->h != matrix->w) {
                 fatal("Matrix: Determinant: non-square matrix input");

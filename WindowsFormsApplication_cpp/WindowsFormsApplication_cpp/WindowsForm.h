@@ -608,6 +608,22 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 				}
 			}
 		}
+		else if (userCommand[0] == "power") {
+			if (userCommand[1] == "matrix") {
+				int indexa = Convert::ToInt32(userCommand[2]);
+				if (indexa < current_matrix_count&&indexa >= 0) {
+					std::vector<myVecD*> eigenvectors;
+					std::vector<double> eigenvalues;
+					matrix_list[indexa]->power_method(eigenvectors, eigenvalues);
+					for (int index = 0; index < eigenvectors.size();index++) {
+						Output->Text += gcnew String(eigenvectors[index]->str().c_str())+Environment::NewLine;
+					}
+					for (int index = 0; index < eigenvalues.size(); index++) {
+						Output->Text += eigenvalues[index] + Environment::NewLine;
+					}
+				}
+			}
+		}
 		else if (userCommand[0] == "eigenvalue") {
 			if (userCommand[1] == "matrix") {
 				int indexa = Convert::ToInt32(userCommand[2]);
