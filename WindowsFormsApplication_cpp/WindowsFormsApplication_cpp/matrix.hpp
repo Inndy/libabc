@@ -357,11 +357,16 @@ class Matrix
             //print out characteristic polynomial for debug
             cout << characteristic_polynomial->str();
             /*-----------------------------*/
-            //find root for characteristic_polynomial = 0
+            //find root for characteristic_polynomial= 0
             //the roots we find are eigen values for the given matrix
 			cout << "hello,world" << endl;
             int root_count;
             double * roots = characteristic_polynomial->root_finding(root_count);
+
+			for (double x = -75.8; x < -75.72; x += 0.001) {
+				cout << (*characteristic_polynomial)(x)<<endl;
+			}
+
             for (int index = 0; index < root_count; index++) {
                 eigen_values.push_back(roots[index]);
                 cout << roots[index] << " ";
@@ -370,7 +375,7 @@ class Matrix
             /*-----------------------------*/
             //find eigenvector coorespond to each eigenvalue
             //the following loop deal with one eigenvalue each loop
-            for (int index = 0; index < eigen_values.size(); index++) {
+            for (int index = 0; index <0; index++) {
                 cout << "the corresponded eigen value is " << eigen_values[index] << endl;
                 //generate correspond matrix
                 myMatD * temp = new myMatD(this->h,this->w);
