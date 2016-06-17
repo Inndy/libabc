@@ -286,7 +286,7 @@ class Matrix
 					bool break_flag = false;
 					for (row = 0; row < this->h; row++) {
 						for (int indexa = 0; indexa < this->w; indexa++) {
-							if (this->cell(row, indexa) != 0)
+							if (this->cell(row, indexa) <-3e-8|| this->cell(row, indexa)>3e-8)
 							{
 								break_flag = true;
 							}
